@@ -1,0 +1,82 @@
+Lambda is Serverless Computing . Without any server. 
+
+Its cheap bcoz on this when ever code will run then only it will be chargable. 
+
+- Lambda is a compute service that let you run code without provisiongin or managing server. 
+
+- With Lambda , you can run code for any type of application or backend service all with zero administration . 
+
+- High avalibility and auto scaling 
+- Monitoring halth
+- security 
+- deploying your code
+- lambda function is nothing but your code
+- it manage logs also 
+
+100 mili second it bills . 
+
+it triggers at perticular time you have to configure it .
+
+If you want to manage your own compute then use Ec2 or Beanstalk. 
+
+=================
+
+Lambda 								Ec2
+Lambda is PAAS .				IAAS Service 
+support 7 language				Any language
+rute code and push to lambda	you need to choose OS , language etc .
+you can logon to OS/plat		you can 
+
+
+Function is a resource that envoke to run code in lambad . that function has code . 
+
+Event source / triger : event is a json docs 
+
+downstream source : after triger next work will be done by lamda we give role to it. 
+
+concurency : Numbr of request that lambda is serving 
+
+===========================
+
+First event will happen --> trigger will happend (trigger menas envoking lambda )-->
+
+Eg: if in s2 bucket one obj will come (or obj change happened , this will happen via a iam role) or API http request is there then it will trigget lambda code. 
+
+lambda function dynamodb, kinesis(streaming), lambda do pull and push both 
+
+lambda func can trigger lambda func. 
+
+Eg: Bucket --> one obj added --> lamda got triggerd it will also DynamoDB to do entri of that object file such as name , size etc . 
+
+real exp : if you create gmail id --> so bck end it will triger google phoot access, g drive access etc this is automation .
+
+you can put dependecies also in lambda function
+you can change config data via api lambad provide it . 
+
+you can run only those which work is done in max 15 min you can trigger those in labda function. default 3 sec max 15 sec. 
+
+it is good only for small task and it cheap for less time only . 
+===========================
+
+Lambda invoke type:
+
+synchronus    push  most common
+asynchronous  event
+poll based    pull 
+
+asynchronous you can set to SNS, SQS , lambda cloudformation, 
+
+poll based : kinosis , SQS , dynamodb
+
+
+=========================
+
+Lab Create a Role for lambda gvive full access to DynamoDB via IAM serveice 
+
+create lambda and put code like if you add any thnig to s3 its inof go to dynamodb table 
+
+create s3 , create dynamodb , updaload any thing in s3 trigger and destinition is dynamodb ck entries here. 
+
+
+
+

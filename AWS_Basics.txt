@@ -1,0 +1,71 @@
+Cloud is Pay as you go model 
+or Reservation model 
+or Unused resources discount model 
+=========================================
+Scalling Type :
+
+Horizontal Scaling 
+
+scenario : small app which need less RAM and CPU 
+
+1 inst -> 1 instance - 1 instance 
+
+Vertical scalling 
+
+More RAM and cPU 
+
+1 instance 
+Bigger instance 
+Biggest instance 
+
+and this could go horizontal instances 
+
+idle scalling : horizontal scalling + vertical scalling if you app added some big features 
+
+best is horizontal
+
+PAAS : Follow Horizontal scalling 
+
+Auto scalling give you horizontal 
+
+Vertical scallig we remove small instacne and add bigger instance 
+=====================================
+Benifits of cloud : Cost saving, 24*7 Availability, scalability, Automated update of software, Desaster recovery, security, reduce carbon footprint etc.
+
+Cloud Options:
+Public cloud : provided by third party provider , simply come, use and pay eg AWS ,AZURE etc
+Private cloud : For a interprises, like you personal resources , eg : private car public ola uber
+Hybrid : as per requriemt some app as public some as private so based on req . eg website in public but data base in private of same application 
+
+===================================
+Type of Cloud Computing 
+IAAS : Do what ever you want compute storage networking all you deside all access, only hardware is managed by Service provider. 
+PAAS : like only application and data part how much hardware need how much ram how much CPU you think only till that 
+SAAS : use Software what you want to do , eg gmail ready application 
+
+same mail if you are making so it will be under PAAS.
+===================================
+Deployment methods :
+Rolling Deployment
+shading deployment 
+canaery deployment 
+blue green deployment : first it will create replica and new update install updated then dns will connect to this 
+
+pod failure : too much traffic cpu memory usage so contaier will terminate or health check will fail then pod fails 
+
+on premices means local data centers 
+=========================
+Basic cloud knowledge
+Database  Data bakup data store 
+Virtulizatin orchistartion 
+API JSON 
+Linux sheet 
+Programing 
+Automation 
+AMtketing analytics 
+
+========================
+Cloud native cncf.io
+
+a application can run in any cloud, or it can run any where 
+

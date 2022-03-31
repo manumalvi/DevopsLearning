@@ -1,0 +1,109 @@
+EBS Backed EC2 instance : OS is in EBS
+Instance Store Backed EC2 instance : OS/Root volume is in Instance 
+
+EBS is network attached virtual Drive.
+
+Instance Store is Faster than EBS.Instance srote is limit of 10 gb but can increase.
+
+Non Persistance : Instance Store , it will delete on stop and terminate but not on reboot.
+
+EBS is good for database. 
+
+1 EBS is attached to 1 EC2 in a single AZ. EBS and Ec2 should be on same AZ.
+
+EBS will replicate in same AZ .
+
+EBS Volume type :
+
+SSD (Solid state drive) types its measure in IOPS
+General Purpose SSD(gp2) this is default volume , Its bootable  (By default gp2 is selected) , 30 GB free . 
+Provision IOPS , its also bootable . used in mission critical operations eg ISRO, satellite , AI based medical operations . 
+Maganetic standard . its also bootable . Lowest cost in bootable .
+
+IOPS : how fast input / output will happen, for more read write Input output per second (IOPS). 
+Through put : MB per second how much fst data transper
+
+HDD (Hard disk drive)  Its non bootable , we cant install OS in it ,only for extra storage. Measured in Through Put 
+Types : 
+Through put optimized : daily usge of data , MB per second , for big data , data warehouse . 
+Cold HDD : cheapest . 
+
+=========================================
+EBS Snapshot 
+
+EBS volume are point-in-time images/copies of your EBS volume.
+EBS snapshot of EC2 volume store in S3 bucket but its your S3 bucket and even you cant see where is that S3.you can only access through EC2 API.
+It may take time (based on the snapshot size )from EBS to S3 but once you initiated snapshot it will take that much only. 
+
+Per AWS A/C 5000 EBS and 10000 Snapshot max.
+
+**IMP : EBS volume are AZ specific , snapshot are region specific. 
+	  EC2 and EBS will on in same AZ.
+	  Snapshot will be in somewhere s3 for that region so that all AZ can access it . 
+	  
+	  Migration of EBS from 1 AZ to other AZ so make snapshot and then create EBS in other AZ. 
+	  20Gb EBS ------took snapshot -----snapshot 20gb-------new EBS from Snapshot must be = 20Gb or More. 
+	  
+	  Non root volume is running you can take snapshot. and you can use also while snapshoting. 
+	  
+	  Incrimental snapshot : first time snapshot will take time next time it wont take that much time bcoz it wont copy which is already copied/present.
+	  
+	  to take complete snapshot of non root volume either stop or un mount. 
+	  
+	  
+Root Volume : you can not take snapshot in running state. stop and then take snapshot. other wise error , if its Instance store volume then pause it. 
+
+Incrimental Snapshot : EBS is AZ and snapshot is region specific. 
+**IMP : 			In incrimental if there is snapshot 1 and you change some thing and again took snapshot2 and in question is if snapshot1 is deleted then it will shift snapshot1 data to snapshot2 first. 
+					for less cost incrimental is good. 
+
+===========================================
+
+EBS Encryption : 
+
+Encrypted Volume will create Encrypted snapshot and visa versa. 
+
+you can attached Encrypted and un Encrypted both to Ec2. 
+
+Encryption always happen at Ec2 side. 
+
+No Direct way to change the Encryption state of the volume.
+Method 1 : EC2 --- UnEncryped EBS1 -- Create new EBS2 and tick Encrypted --- Copy data from EBS 1 to EBS2 via EC2 so it will Encrypted.
+Method 2 : Create snapshot of unencrypted volume	  
+
+
+===========================================
+Root Volume : 
+We can encrypt root volume while creating Ec2 instance. 
+
+workaround Method: 
+make AMI of this root volume and its also unencrypted and while copying you can make encrypted . 
+Encrypted AMI can be shared. 
+
+** Snapshots are associated with EBS while AMIs are associared with EC2 instances.
+
+==========================================
+How to share EBS encryption key : 
+
+To encrypt volume or snapshot we need a key these keys are called customer master key and managed by Key management service (KMS)
+**First EBS volume encrypted aws KMS create default CMK key. you cant share key. not ebs volume.
+After that each new Encrypted volume is encrypted with unique saperate AES-256 bit encryption key.
+
+Changing Encryption key 
+
+**Ec2----EBS key1 ---- snapshot key1 ----then create copy of Snapshot -----snapshot new key key2 now you can share this key 
+
+UnEncryped shapshot can be shared but make it public or add account .
+Encrypted snapshot cant be public on AWS , you can share without default key. 
+
+A snapshot is a backup of an EBS volume
+==========================================
+Lab root volume with another EC2 Instance 
+so detach current volume and attach new volume but give /dev/sda1 
+ 
+recomanded : stop root volume while taking snapshot.
+
+
+
+
+

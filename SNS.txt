@@ -1,0 +1,32 @@
+SNS : SImeple notification service 
+
+Push notification service. like rechange over, bill pending, 
+publiher are prducer sender. 
+subscriber: email , sms , http , https, lambda , sqs, email json  etc 
+
+send single or send to muliple 
+
+pay as you go model , 3 copy in one region in az. 
+
+autosclaing we can attach . 
+
+Topic is just name . one tipoc can send multiple protocol .email sms etc 
+
+public send to topic and then who ever subscibe topic it will go to those. 
+
+owner can change permision to toplic. 
+
+SSL secure is there. 
+
+=================
+
+Amazon SNS Alternative : 
+
+Amazon kenisis data stream 
+Amazon msg queue servuce
+Apache kafka
+Twilio
+Pusher 
+
+
+

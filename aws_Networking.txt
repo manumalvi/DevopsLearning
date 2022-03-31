@@ -1,0 +1,172 @@
+OSI Layers : 
+Application Layer : http , ftp , smtp , dns
+Presentaion layer : for Encryption and decryption , ssl certification terminates at this layer , SSL ,SSH 
+Session Layer : sync and send to port , API socket 
+Transport Layer : End to End connection , TCP UDP 
+Network layer : packer forwarding 
+Data link layer : packet formation 
+Physical layer : raw bit via cable 
+
+TCP/IP model 
+Application Layer 
+Transport Layer
+Internet layer (IP)
+Network Access Layer
+=======================
+
+Route 53 is AWS DNS 
+
+25 Region and in that 81 Availibility Zones each region has 3 zone a,b,c 
+
+Region > Availibility Zones > Edge Locations 
+
+Edge Locations is where end user access services located at AWS , They are in major cities of world to reduce latency , used for cloud Front. 
+
+Edge location like metro cities having more demand so if app had to fetch data request will go till US now new user will come and request wont go 
+to US it will fetch freom Edge located only 
+
+VPC : 
+Amazon VPC is service that let you launch AWS resources in logically isolated Virtual network that you define . 
+you have complete control over Virtual networking environment including selection of IP , subnets , Route table and network gateway . 
+
+private subnet wont have access of internet 
+
+Security group ast as a firewall 
+
+VPC Components : Virtual network dedicated to your AWS account 
+Subnet : Range of IP address in your VPC 
+		 Private subnet is not exposted to outside world internet
+ROute table : A set of rules called route that are used to determine where network traffic is directed . 
+		Route table determine destination and target . Target could be Internet Gateway , NAT Gateway , Virtual Private Gateway , VPC Peering Connection
+
+Internet Gateway : That you attach to your VPC to enable communication btw resource in VPC and Internet. 
+
+VPC Endpoint : Enables you to privately connect to your VPC to support AWS services.VPC Endpoint powered by private link without requiring Internet
+		Gateway, NAT device , VPN connection or AWS Direct connect COnnection . 
+		
+CIDR Block : Classless Inter DOmain Routing .And IP address allocation and ROute Aggregation methodology . 
+
+NAT Gateway : Network Address Translation Gateway. Used when Higher bandwidhth, availebility with lesser admin affor is required. 
+			Its always reside in public subnet. 
+			
+Elastic IP : Its a static IP address that never changes. It reserve for your AWS A/C until released. 
+
+Security Group: Are set of Firewall rule that contol traffic for your Instance . 
+
+VPC Peering : VPC Peering allow you to route traffic between 2 VPCs using IPV4 / IPV6 private address. 
+
+Network ACL : Optional layer of security for your VPC that act as firewall for controlling traffic in and out of one or more subnets.
+
+Virtual Private Gateway: Its VPN Concentrator on amazoon side . Create VPG and attach to VPC from which you want to create VPN  connection.
+
+Traffic coming inside is always free going out is chargable 
+
+IP : 
+
+The allowed range of CIDR block size for VPC is between a /16 network mask (65536 ip address) and /28 network mask (16 ip address)
+In CIDR Block first 4 and last IP address are not avalable for use.
+
+Eg: 10.0.0.0/24  total IP 256
+Reserved : 
+
+10.0.0.0 		Network Address
+10.0.0.1		Reserved By AWS for VPC router
+10.0.0.2		Reserved By AWS 
+10.0.0.3		Reserved By AWS for  future
+10.0.0.255		Network Broadcast address 
+
+Why AWS VPC Subnetting needed : Subnet must reside entirly with in one Availibility zone and cant span zones.by launch app in saperate zone you can save application from failure of single location. AWS assign unique ID to each subnet. 
+
+Example : Create CIDR block 10.0.0.0/24 it support 256 IP address. you can break CIDR block into 2 subnets 10.0.0.0/25 and 10.0.0.128/25
+
+10.0.0.0/25 (IP address 10.0.0.0-10.0.0.127) and 10.0.0.128/25 (IP address 10.0.0.128-10.0.0.255)
+
+VPC per Region Default 5 
+Subnet per VPC Default 200   on req it can increased 
+
+ROUTE TABLE : 
+VPC use route table to control network traffic. Each subnet must associate with RT. you can associate subnet with RT otherwise subnet is implicitly
+associated with main RT . A subnet can only be associated with 1 RT but you can associate multiple subnet to that RT. 
+
+NETWORK ACCESS CONTROL LIST : 
+Default NACL is configured to allow all traffic to flow in and out . smallest has more priority. 
+
+SECURITY GROUP : Virtual Firewall for your instance to control in bound and out bound traffic. 
+when you launch instance in VPC you can assign upto 5 Security Groups to the instance.
+SG act at instance level not subnet level. 
+Here only Allow rules no deny rules .
+Only deny rule in NACL . 
+
+SECURITY GROUP 											NACL
+Operate at Instance level						Operate at Subnet level
+Only Allow Rule 								Allow/Deny both rules
+Its Stateful: we need not to explicit 			Its stateless we need to tell in both alow/deny in In bound / Out Bound
+say in outbound if its in in bound allow
+then out bound happen
+We evaluate all rules before deciding 			we process rule in order starting with lowses number. 
+whether to allow traffic
+
+
+NETWORK DEBUGGING:
+
+install speedtest to ck speed on instance 
+
+apt install speedtest-cli
+$ speedtest
+
+If you stop EC2 IP will be lost . 
+
+If network is slow you can increate its network to network performance or type to t2.medium / large etc 
+
+IP Address Exhausting : COnfigure VPC subnet CIDR block properly 
+
+NETWORK SECURITY:
+
+1. Shut off the  affected server instances from internet the use security S/W tool to identify malware/virus etc and clean them up 
+2. Hide application server from internet via private subnet and accept trafic via load balancer.
+3. Always monitor server and do periodic scan
+4. Collect all VPC logs trafic log 
+
+NETWORK MONITORING : 
+Tools 
+Solarwind Network performance monitor
+Datadog network monitoring
+site 24 * 7 network monitoring
+ManageEngin OPManager
+Nagios Monitoring tool 
+
+Containerization to move app to athoer acount or instnse 
+
+=======================================
+CODE COMMIT : 
+
+AWS Code Commit -> create IAM -> then login with git -> do git operations git commit git push -> you can see it in AWS code commit and manage it 
+
+CODE BUILD : 
+Its a service which help us making builds 
+It is the process of converting SW into binaries. or Final code or workable code or want to run in Production 
+
+CodeBuild is continious intrigation service that compile source code, run test and produce SW packeg for ready to deploy 
+so we can give code place like AWS Code COmmit or git and from there it build code with help of buildspec.yml 
+sourcecode + buildspec.yml 
+
+SOurce is Code Commit / Github etc .. 
+
+AWS Code Deploy : 
+It automate SW depoyment to versity of compute services such as EC2, AWS Fargate , AWS Lambda and on premise servers. 
+It help you to rapidly release new features . Help you to avoide downtime during deployment .
+
+Source code + appspec.yml (all deployment related commands)
+
+Codedeply can work with EC2 / lambda 
+
+All Ec2 instances must have codedeploy Agent running 
+
+=================================
+
+Inline policy is mananges by customer it self 
+
+
+
+
+

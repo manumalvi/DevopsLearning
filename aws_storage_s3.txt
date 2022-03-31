@@ -1,0 +1,189 @@
+Type of Storage:
+Simple Storage Service (s3)
+Elastic File System
+Elastic Block Storage
+Glacier
+Snowball
+
+1. Simple Storage Service (s3) : Object based storage , can be accessed from any where . movies , word file , photo etc 
+2. Elastic File syatem : At common place we have file and all can access from there from different region / AZ . only for linux based os . 
+3. EBS : Block Level Storage . it attached with Ec2 , and it can only access its attached with same instance like external Hard disk . 
+4. Glacier : new name s3 Glacier , high avalallbe, kind of archive storage , and its cheepest one. not for daily use. old song they used to keep in tapes but now they are moving to glacier. 
+5. Snowball : its for huge data , its a device portable storage for huge data to migrate into cloud. 
+
+Block level storage													Object level Storage
+1.Its for Transactional Database, structured DB 				1. It store the File as it is it donest devide them .
+2.Data to be stored in evenly size (data chunk)					2. An object is data itself, metadata , global unique id (name,id  ).
+for instance, file can be split into equal size
+block before stored. equal size, its having indexing
+3. Data block wont contain metadata								3. it can be mounted as drive.
+metadata(size,creation date,properties, type etc)
+4. Block storage only keeps the address index 					4. dropbox , s3 , facebook photo etc 
+where the Data block are stored. it just care 
+how to retrive it when needed.Eg : EBS 
+5. it can access via instance only. 							5. can be accessed trough internet , http , https.Its storage for internet.
+																	
+																	
+=============================================
+
+S3 : 
+
+we cant store Operating system in S3.
+
+S3 has a distribute data storage architecture where object are redundently store in multiple locations.
+s3 is region specific service. and it will create at least 3 copy of it for bkup. but we dont know where its store in which AZ. but within region.
+Data store in Bucket. 
+Bucket is Flat container of object , you cant create bucket inside bucket. 
+Max capacity of a bucket 5 TB . you can create n number of bucket . 
+you can create folder inside Bucket. but no nested bucket.
+Bucket ownership is not possbile. you cant transfer it. 
+s3 bucket is region specific.
+possbiel while error : 
+name shoud be unique globaly,
+bucket name cant be changed once created. 
+after deleting bucket then you can create with that name. 
+Bucket name limit 3 - 63 char
+In url to access it half part is bucket name only 
+bukcet name cant have space , use dot.
+bucket can cotain lowercase.number and hyphen 
+cant start and end with hyphen 
+by default buckets are private. 
+
+=========================================
+s3 Bucket sub resources. 
+
+1. life cycle mgmt : s3 standered -----------30 daya --------s3 IA (infrequesnt access cheep)---------------90 daya--------Glacier cheeprest. 
+2. website : for static wesite hosting . 
+3. versioning : you need to enalbe version , to keet all versions file are saved , name hsould be same. and you can access. it cant be diabled. suspend is there . 
+4. Access conteol list : who can access . 
+
+bucket name 
+bucket region endpoint/bucket name
+https://s3-eu-west.awsamazon.com/mybkt
+
+bck owner can grant access to another user to upload object. 
+if you are making data public but give only read. 
+bck can have password. 
+
+========================================
+
+S3 Versioning : 
+1. Protection accidently deletion , delete marker you can retrive from there . 
+2. versioing can also use for data retention and archive 
+3. IMP : once verioning enable but can disable only suspend. 
+4. when enabled bucket versioing will protect existing and new obj and maintain there version .
+5. It enalbe on entire bucket. 
+6. If you again do delete marker then it will again restore to bkt. 
+7. All versioing it chargable. 
+8. you can do life cycle mgmt on verioning.
+9. Object will have verion iD as NULL before versioing .
+
+MFA on s3:  google auth ,microsoft auth , every 30 sec 
+
+========================================
+S3 multipart upload 
+
+100 mb file and make 10-10 mb parts and its parallel processing, while uploading it will be fast but again it will be rejoint once uploaded. For fast up
+
+Copying s3 object 
+
+if more then 5 gb then multipart upload will happen.
+
+if charging in some other region them more charges . + storage charged. 
+you can move it for cheap storage like from s3 stander to IA. 
+
+=======================================
+
+s3 Storage classes : It all has chanrges when you retrive it + storage changes , upload no chrges , All have 3 copy in AZ, except one zone IA.
+
+s3 standard : Costest Storage , frequesnt access data, daily access kind of . 11 times 9 , durability of failure/currupt. 99.99 Availability. 
+			Storage is high but access cost is low.
+
+Glacier deep archive : cheapest : very less usage like 1 in year or may not, like music company keep songs here . retrive with in 12 hr, multiple copy
+								magnetic tapes . 
+Glacier : yearly 2-3 , how much time you want data for that you need to pay more .retrival option mins , hours etc .  multiple copy
+
+s3 Standerd Infrequesnt Access : Cost less but pay to access it more frequently, monthly 4-6 days, its not like glacier it will give data immidietly
+								 but glacier can give you in hours also. IA for 30 days only. 11 times 9, 99.9 Availability.
+
+One zone IA : It has only in one zone only, you can use this for bk up like you have one copy in Harddisk of office you want one more .And easily 	recreatable data , you can use s3 lifecycle, lowest availibility 99.5% .
+
+Amazon S3 Intelligent Tering : s3 standered -----------30 days --------s3 IA (infrequesnt access cheap)---------------90 days--------Glacier cheapest. 
+								then which ever data you used it will bring to standard and so on . 
+								It automaticly moving data to most cost effective. 
+								Less than 128 kb file will not move to IA , it will be remain in standard. even if you do not use it frequesntly. 
+								11 times 9 , durability of failure/currupt. 99.9 Availability. 
+
+IMP : IA    vs Intellegnt tearing (uncertainity of use of frequency)
+
+=====================================
+
+Labs : S3 is global service its parameter like bucket is global unique. 
+
+if your bucket is empty then no charges. 
+
+Lab S3 via CLI (install AWS cli and after aws configure inter credentials from you AWS security credentails.)
+enter region also 
+
+
+U:\>aws s3 ls
+it will give bucket list if any present. 
+
+create Bucket
+U:\>aws s3 mb s3://afgdfsdfasfsfsa
+make_bucket: afgdfsdfasfsfsa
+
+Delete Bucket
+U:\>aws s3 rb s3://afgdfsdfasfsfsa
+remove_bucket: afgdfsdfasfsfsa
+
+
+Sync to upload files in Bucket
+
+C:\Users\mmalvi\Desktop\tsting>aws s3 mb s3://uploadfilesfromcli
+make_bucket: uploadfilesfromcli
+
+C:\Users\mmalvi\Desktop\tsting>aws s3 sync . s3://uploadfilesfromcli
+upload: .\Git Learning to s3://uploadfilesfromcli/Git Learning
+upload: .\2022-02-09_13-01-31.png to s3://uploadfilesfromcli/2022-02-09_13-01-31.png
+
+C:\Users\mmalvi\Desktop\tsting>
+
+
+even if you delete data from desktop tsting folder and give below cmd it will sync again with desktop folder.
+
+C:\Users\mmalvi\Desktop\tsting>aws s3 sync s3://uploadfilesfromcli .
+
+Now empty it and delete it . 
+
+===========================================================
+
+Lab 2 : versioing , it can enable and suspend 
+
+Lab 3 : Cross Region Replication : Enables automatic, asynchronous copy of object accross bucket in different region . 
+useage : 
+minimize latency
+increase operational effect 
+
+Versioning must be enabled for CRR , abd in replication rule it should have source destinamtion , so only if you will upload data in source it will refelect in destinamtion and visa versa not work . 
+
+===========================================================
+
+Lab 4 : Object life cycle : when the data gets older we want it to delete . It applies on bucket. 
+
+After creating bck go to management -> life cycle 
+
+===========================================================
+
+EFS : Elastic File System : If you wanted to share data with in Region btw different AZ . ONly For Linux OS 
+
+1. create EFS in console and enable for all AZ , 
+2. then create 2 instance in diff AZ
+3. few command to mount efs use those and you can share files at same directory. 
+
+===========================================================
+
+
+
+
+

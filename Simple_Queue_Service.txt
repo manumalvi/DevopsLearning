@@ -1,0 +1,73 @@
+If you have amazon.com then you will login so this is done by one server then first server will send msg to next server this guy is logged in now show him contenct now you will select any thing and add to cart then msg will go to next servr to payment so this all thing happens in queue by passing some massages. 
+
+youtube service video will aplocd in s3 bucket once video updaloaded it will send mesaage to Queue and next server will chekc any msg for me .
+so once it will receive its msg then it will process that video and conver to mp4 and upload in next bck of mp4 and again next server will ck queue
+and it will se it got msg then it will publicsh for all users. 
+
+SQS is used in e commers payent apps . 
+
+Visibility timeout : as soon as server take task from queue so visibility will start so that msg will not show to any one. and if processed and deleted.
+
+if more time taking then it will increase visibility timeout. server extend via api 
+
+in other scenario if that task is not done proces fail then it will come to queue and other server will take it to process. 
+
+If any msg is not process in 3 times then it will be send to Dead letter queue. 
+
+===========================
+
+SQS and FIFO are 2 techniques to process. 
+
+1.Fast relible and fully managed Message queue service . 
+
+2.Its a pull service .
+3.Msg wait to be process in queue
+4.SQS allows the decoupling (server will take work if one is not able to process , failure in one componnet it wont effect.)
+5. SQS queue msg can be deleted without deleting entire queue
+6. If there queue is keep on incressing then autoscaling need to be done.
+
+
+AWS Queqe: 
+
+Standard Queqe : duplicasy is possible, order can be changed. 
+Fifo Queqe : once one msg will process then only next msg it will take , no duplicay . 
+
+FIFO is better. 
+
+==========================
+
+BIlling for this 
+
+1. FOr all API action
+2. API call sending , deleting , changing visibility, change at FIFO queue.
+3. 1 request is 64 kb size . 
+
+
+Polling : 
+
+Pulling the msg from queue is called polling . 
+
+Short polling : it wont wait just go to queue and pull msg . and if queue empty then it eont wait. 
+				Receive msg wait time set to 0. 
+				
+				
+Long Polling : it wait, empty responce reduces , wait till timeout. Receive msg wait can be 1-20
+
+Retention Period : Max duration msg will be keept in msg queue max 1 to14 days default is 4 days. 
+					DynamoDB , Ec2 , s3, lambda , RDS, red sift . 
+					
+Visibility timeout : read above 
+
+Delevery delay : it will postpone the delivery of new msg if application need it.
+
+Receive msg wait time
+
+Dead Latter queue : not successfully processed. 
+========================
+
+Lab you can create sqs and trigger it through lambda 
+
+
+
+=========================
+

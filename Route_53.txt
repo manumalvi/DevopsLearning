@@ -1,0 +1,87 @@
+DNS port number is 53. 
+DNS Resolve IP to domain and vise versa.
+
+DNS is Domain name system : save all domain and keep ip of it. 
+
+IN aws the same work is done by ROute 53.
+
+Route 53 Functions  : 
+Register new domin.
+Transfer existing domain.
+Route Traffic for your domain to your aws and external resources. Monitor the health ck of your resources (Servers , Load balcncer , s3 bucket).
+
+How to communicate to a website eg www.techguftgu.com
+
+in browser www.techguftgu.com --------> DNS resolver -----> root name server (.com) ---> Name server (techguftgu.com)---> name server (www.techguftgu.com)
+
+this will give ip address to DNS resolver and it will connect to server now. 
+
+=========================================
+
+If you regiter domain with godaddy and site is hosted on AWS (Hosted zone) so the name server information will be added in godaddy so that it can direct trafficto aws. 
+4 name server will be created. 
+
+Route 53 is Global service. 
+Route 53 supports IPV6
+
+AWS we can register
+ Generic top level domain .com , .org  etc
+ Geograhic top level domain  .in , .au,  .uk  etc
+ 
+only you can migrate to aws doamin which are there in generic and Geograhic domain. 
+
+========================================
+you can create a public hosted zone or private (internal zone) hosted zone. 
+
+For each public hosted zone route 53 automaticly crate 4 Name server and 1 SOA start of authority. Done change these records. 
+
+Hosted zone name can be same but not the name server info. 
+
+SOA contain information about HOsted Zone.
+
+========================================
+If you already have DNS service and want to migrate to ROute 53 : 
+
+1. Start by createing Hosted zone manually. 
+2. once created Route 53 will allocate 4 name server with different top level doamin like .com , .org, .edu , .net to hosted zone. 
+3. remove godady name server and add route 53 in that place. 
+4. some are not showing Name server option so you need to update ip from nslookup 
+5. Hosted zone are not transfered.
+
+DNS record type: 
+
+A record : Address record : map down address to ip 
+
+AAAA record : same as above but for IPV6
+
+CNAME: Canonical name record : it give aliasee  eg : www.tech.com , tech.com . SUpporttech.com you can make CNAME for this you cant make for main www.tech.com . 
+
+NS Recored: 
+
+SOA : owner of record email , server info, serial number, Time to leave info. 
+
+MX record : Mail exchange : 
+
+======================================
+
+When you create record then only you have to apply route policies : 
+
+Types : 
+Simple routing (default): 
+Failover routing : at least 2 server primary and standby. in case of webserver failed. yo need to create 2 records . 
+
+Geo location Routing : location based , when you have different server at diff locaton , suppos one request come from india then it will send to india server if that sever is present. used for local contents like ads or amazon then it will take you to amazon.in . 
+overlaping region query will go to small region . 
+
+Multi value : we can give different ip to reach your server . for latency. max 8 helathy record. 
+
+latency based latency : if you get quickest response from any where it will redirect to that server. 
+
+Weighted routing : you can put policy hw much give weighted to which server . single doamin name for load balancing and testing new server. weight assigned from 1-255 .
+
+Geo proximity : area wise request you will send to server if load more on 1 server then it will route to onther server it shift traffic one to anoter.
+you can expend or shrink . 
+
+
+
+

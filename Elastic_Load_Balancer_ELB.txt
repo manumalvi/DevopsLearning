@@ -1,0 +1,108 @@
+Fault Torerence + High Avalability 
+
+Efficiently distribute incoming traffic across the backend servers. 
+
+Types : 
+Application LB : OSI 7th Layer Application Layer, Protocol supported Http/Https
+Network LB (Less Latency) : OSI 4th Layer Transport layer Protocol supported TCP UDP TLS, to process million or request per second.
+Classic LB (old)
+
+Load BAlancer is on VPC . you need to attach AZ to LB. 
+
+** www.tech.com ------> will ger resolved in Load Balancer DNS (This will have public IP) then into IP ---> In any subnet any Instance (IP) Ec2 could have public IP but it must have Private IP , Bcoz load balancer will communicate through Private IP. IN VPC to comm private ip needed. 
+**** Its not nessasery that all Ec2 req will go through LB only , bcoz it has only http/https or tcp/udp ports so if any one pingin from outside ping works on ICMP so the request wont go from LB. 
+
+
+IN LB 3 things 
+
+Listner  : Lister will listen for which port the request has come eg : 80,3389, 443 etc
+Target Group : Group of Ec2 instances where connected to LB . use maximum AZ put you Ec2 
+Target : Individual Ec2 instance in Target Group . Each Target will have Health ck to ck instance is Health or not. 
+Target could be Instance , Ip or Lambda Function . 
+
+When Target type is IP you can only use these CIDR: 
+
+10.0.0.0/8
+100.64.0.0/10
+172.16.0.0/12
+192.168.0.0/16
+you cant specify publicly ip address as target ip.
+
+=================================================================
+ELB Listners : 
+It can Load balance in region not cross regions.
+
+Lister checks for connection request. http/https/ssh/tcp all are connection oriented .LB works with these protocol.
+Load Balancer has hourly bills.
+LB deletion wont delete EC2 instance.
+ELB send traffic ip to EC2 , primart enternet eth0 , and primary ip 
+
+================================================================
+ELB supports on ipv4. 
+ELB subnet supports minimum /27 subnet. not less than that. 
+bcoz 2^5 = 32 ip and 5 reserved 8 ip ELB takes for him so 19 left for Ec2 instances. if you make it /28 it will be very less hence min 27 should .
+
+for Fault tolerent we need to have at least 2 AZ.
+
+We need to create same number of instnace in az.
+
+LB Check which instance is healthy. or unhealthy. 
+Through API also 200 ok it ck health or unhealth and through ping TCP port 80 also it checks.
+
+Responce Time out is 5 second. you can increase it till 60 sec . it will say unsuccesfull . 
+Next time it will ping time interval 5 mins can change this value . 30 sec default.
+Unhealthy Threshold : Default unhealth responce is 2 . if this happen 2 times continoiusly then it will declare unhelathy.
+Healthy Threshold : default 10 . 
+=================================================================
+
+ELB distribute trafic equally in AZ dispite of EC2 instances in AZ.3 AZ , 33%33%34% 
+
+so for the above problem we need Cross Zone Load Balancer . 
+it will distribute load as per the EC2 instance in each AZ. 3 AZ having 2,4,4 EC2 then load will go llike 20%,40%,40%.
+
+Only 1 subnet can be defien for ELB in one AZ. if you attach another it will replace first one.
+
+ELB always access through DNS not via IP . 
+
+An ELB can be Internet facing or Internal ELB.
+
+INternet Facing : 
+ELB node will have public IP.
+DNS name will resolve the ELB DNS name to these IP .
+It will route to Private ip of ec2. 
+
+ELB should have Security Group. 
+Target grp can be associated with an Autoscaling Grp. 
+
+===================================================================
+
+LAb 1 : Application LB  
+Create 2 instnace in 2 different Subnet. Create TG register instance and create LB in each instnace run any nginx , httpd server and ck with lb dns.
+
+================================================================
+Lab 2 : Network LB 
+2subnet 2 instance --> Connect to Network LB -->Target Group -> Private IP to Target GP .
+
+================================================================
+Lab 3 : 
+Establist load balancer among 2 VPC 
+
+1. Create 2 VPC , vpc1 and vpc2
+2. create 2 subnet in VPC1 and one subnet in VPC 2
+3. Create Internet Gatewy for Vpc 1 and vpc 2
+4. Edit Route table and add 0.0.0.0/0
+5. Create Peering Connection and update Route Table
+6. Create 3 ec2 instance 1 in each subnet
+7. install webserver on all 3
+8. Create Application LB , Target type Ip 
+9. Register private ip of ec2 in target group 
+10. copy dns of LB and paste in browser. 
+
+LB can connect to 1 vpc as primary . 
+
+
+
+
+
+
+

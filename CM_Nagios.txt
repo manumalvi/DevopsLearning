@@ -1,0 +1,115 @@
+Splunk/Kibana/premethos/librato etc CM tools 
+
+Nagios : its a open source tool for COntinious monitoring for system , network and infrastructure. 
+Basic use of CM is Reduce Downtime. 
+
+Failure inside CI/CD pipeline 
+Apllication Failure 
+Infrastructure Failure 
+Analysis of Failure 
+
+Nagios Port number : 5666,5667 and 5668 to monitor its client.
+
+Reduce Downtime
+Client server Architecture 
+Nagios Server send request to Client and ask all ok its called Active Monitoring . If client send update menas its passive Monitoring.
+Detect all type of network/server and infrastructure issue.
+Very oldest and still used max. 
+
+Send alert if condition change . 
+Monitoring network services like http,smtp,snmp,ftp,DNS,pop,ssh etc .
+
+Phase of COntinious Monitoring:
+1. Define : Develop a monitoring stratergy.
+2. Establish : How frequently you want to monitor.
+3. Impliment 
+4. Analyze data nad report 
+5. Respond 
+6. Renew and Update
+
+Nagios Architecture :
+Its a client server . Nagios server will have configuration file which will have client ip address etc. 
+
+SO Deamon will do all work and it has one Plugin NRPE which do work . Negios Remote plugin executor. 
+but clicnt also should have some one to tell to that NRPE plugin so on client its NRPE Agent (CHeck_SSH,check_http etc all plugins are there what ever we have to check ) is there on client nodes. 
+
+Nagios Dashboard ---> Nagios DB ---> Nagios Deamon <---> NRPE <------ SSH --> Client NRPE 
+
+How Does it Work ? 
+1. Mention all Detaisl in Configuration File. 
+2. Daemon read those details what data to be collected . 
+3. Daemon use NRPE plug-in to collect data from nodes and store in its Database.
+4. from DB it shows on Dashboard.
+
+
+PreRequisite : 
+httpd
+php
+gcc & gd compiler 
+makefile to build
+perl 
+
+Main Configuration File 
+/usr/local/nagios/etc/nagios.cfg
+
+All moniotring things called as Service. 
+
+Eg: 5 serves (nodes or clinet ) --> 4  checks each  (http,ssh etc )
+you have to monitor 5*4=20 services.
+
+On Dashboard You can see : 
+
+Host--> down
+		unreachable
+		up
+		recovery
+		none
+		
+Services -> warning
+			unknown
+			critical 
+			recovery
+			pending
+			
+===========================================
+
+Make Ec2 instance and allow ssh/http or all traffic 
+
+yum install httpd php 
+yum install gcc glibc glibc-common
+yum install gd gd-devel
+
+now create account for ngions 
+
+adduser -m nagios
+passwd nagios 
+
+groupadd ngioscmd
+usermod -a -G nagioscmd nagios
+usermod -a -G nagioscmd apache
+
+Download Nagios core and plugin 
+
+mkdir ~/Downloads
+ cd donwloads
+
+then Download Nagios and its plugin from net.
+wget ngios url 4.0 
+wget ngios plugin 
+
+install ngios extract it and install 
+/configure --with-command-group=ngioscmd
+
+Compile source code 
+make all 
+
+make install
+make init
+make install-config
+make install-commandmode
+
+make install-webconf
+
+
+
+

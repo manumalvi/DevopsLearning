@@ -1,0 +1,203 @@
+Software configuration management 
+or
+source code management
+
+centralized version control system : svn , it need internet to update , if this cenrtal repo failed then code loss. 
+distributed version control system : git , you can work on it without internet also, you will have local Repo on which you can work.
+
+GitHub : its a Remote repo, its a service, Owned by Microsoft.
+Gitlab : its a service, But opensource.
+Git is a software on locally 
+
+so in Git initially we work locally to add code later if we need we can push it to hub so internet is not need as such . 
+it has local Repo before Remote repo hence its distributed system. 
+if you do commit it commit in local repo.
+
+=============================================
+
+1. Install git 
+2. Create a Directory 
+3. Inside Directory do git init , with this .git will be created and dir will become git local repo.
+   this will create 3 virtual partions 
+   workspace / working dir : code will be written here
+   staging area : ADD, add in stagin area those things which you want to commit 
+   Local Repo : COMMIT, staging to local repo is commit its like snapshot, default branch master branch
+   Central Repo : GITHUB PUSH 
+ 
+git init
+git commit -m "first commit"
+git branch -M master
+git remote add origin https://github.com/manumalvi/temp2.git
+git push -u origin master
+
+==============================================
+
+.git directory having these files. 
+
+mmalvi@INM01222 MINGW64 /u/gitdemo/.git (GIT_DIR!)
+$ ls
+COMMIT_EDITMSG  HEAD  config  description  hooks/  index  info/  logs/  objects/  refs/
+
+=============================================
+
+Commits:    Are incremental snapshots . 
+
+Tags : 	    Assigned a meaning full name to version.
+
+Snapshots : It is increamntal commit, it hold old version and add new things . append data 
+
+Push :      Local to Git hub 
+
+pull :      Github to local , to sync local copy
+
+Branch :    Default is master , diff tasks, each task has saperate branch, parallel work 
+
+============================================
+
+All Steps git : use gitbash it work like linux 
+
+git config --global user.name " manu"
+git config --global user.email "mail id"
+
+To ck the user config 
+git config --list
+
+git latest version git 2.35  2.20 
+
+mkdir gitfolder
+cd gitfolder
+git init							# It will Initiate you .git direcory to use for Git
+									# add some file here 
+git status   						# It will show untracked files 
+git add . 							# It will add File to staging Area
+git status 	  						# Its tracking the added Files in staging area
+git commit -m "first commit"    	# It wil Commit the Files
+git log 							# It will show the Details of commit like Author ,Date ,Commit id, Commit Message etc 
+git show <commit id>   		    	# It Shows the Expanded Details about Commit.
+git remote add origin <url of git>  # To connect with central repo (GitHub)
+git push -u origin master 			# To push to Central Repo (GitHub)
+enter username
+password
+now ck in git hub 
+
+
+other person wants to get the same repo then do create dir and init 
+git remote add origin <url >
+git pull origin master 
+or 
+git clone <url>
+its same as git add 
+
+============================================================
+.gitignore
+
+To ignore some files with specific extentions 
+create .gitignore file by vi 
+*.java
+*.css
+
+git add .gitignore
+
+git commit -m "ignored files"
+
+so if you will add all then it will skip files mentioned in .gitignore
+
+============================================================
+
+To check latest commits 
+
+git log -1 for two -2
+
+git log --oneline
+
+git log --grep "my first commit"
+===============================================
+
+Branch
+
+git branch    					# It will show which branch you are in , * shows in which branch 
+
+git branch new_branch 			# To Create a new Branch
+
+git checkout new_branch			# To Switch to a Branch
+
+Delete 
+
+git branch -d <new_branch>	    # To Delete to a Branch, First come to Master Branch
+
+Merge							# Merge has a pulling mechanism 
+
+git merge new_branch		    # To Merge the Branch to Master, First come to Master Branch
+
+Git Conflict
+
+	same File name but File data is completly different then it will conflict 
+
+	now go to master branch and open the file by vim it will show all data 
+
+	and just remove head and ==== and make some changes and do add and commit . 
+
+============================================
+
+Stashing : 
+
+you are working on some thing and customer comes and ask to do some other work first and continue after some time you main work 
+
+so you cant add or commit this main work hence you have to keep this in STASH it like temp storage in work space . 
+
+my workspace will get empty, then i will work on new taks commit that and again i will bring back my main work from stash to workspace.
+
+after commit workspace gets empty.
+
+stash a file which is working file only . 
+
+To stash an Item 
+
+git stash -a   				# It will stash all Working Files 
+
+git stash list 				# To see the list of Stashed Files
+
+git stash apply stash@{0}   # To bring back file from stash 0 is latest and 1,2,3  older 
+
+							# After bring back also work will be in stash(copy and paste) so if you will stash again then git stash apply stash@{1} 
+
+git stash clear   			# To remove from stash 
+
+=============================================
+git reset  : before commit
+Git revert : after commit 
+
+git reset 
+
+git reset filename   		# If you have added in staging but you want to remove from add then git reset 
+
+git reset .   		 		# (opposite of git add . )
+
+git reset --hard  	 		# It will delete from both workspace and staging both 
+
+Git revert to undo existing commit. 
+
+git revert <comit id>		# if you do revert you will get new commit id 
+
+=============================================
+
+Remove untrack file 
+git clean -n 				# Dry run it will show untracked files.
+git clean -f  				# Forcefully (-n is for warning it will give )
+
+
+To Give Tag 
+
+git tag -a imp -m "imp commit" <commit id >
+
+git show imp			   # To see by the Tag  
+
+
+Tags
+git tag to see all content
+
+to delete tag 
+git tag -d <tag name>
+
+===============================================
+git remote -v 			  # To check the URL of Cloning

@@ -1,0 +1,106 @@
+Fault Torerence + High Avalability 
+
+Auto scalling = scalability means increase and decresse . Automatic scaling , EG: Flip kart sale bigbillion . 
+Autoscaling can be done for other resources as well not only Ec2. 
+** Fault Tolerance
+** Autoscaling is Region Specific. It happen in AZ. you need to give different subnets, so that autoscaling can happend in different AZ.
+** There sould be condition for autoscaling like CPU utilize more than 70%
+** The load on new servers will be distributed by Loadbalancer.
+** Scalie out/up (Increase) , Scale In/down (Decrease) , Horizontal Elasticity (scaling)
+** No extra billing , billing we depend on new instances only. 
+
+Autoscaling Components: 
+
+Launch Configuration : Like Instance type , key pair, AMI , SG etc ..
+Auto scaling Group: Group name,size,VPC,Subnet, Health Check period
+Scaling Policy: Metric Type (CPU utilization server 80 %) , Target type 
+
+==================================
+ASG works on entire region and while Autoscaling you need to select AZ's subnets so that it can create instance in all Subnet.
+Autoscaling Group do rebalancing in AZ.
+While rebalancing ASG will add new Ec2 and then remove EC2.
+
+You can add EC2 to ASG in running state only. 
+** Instance can be part of ont ASG only
+** Ec2 and Autoscaling Group in same AZ to add . 
+** Supose we have max 6 instance and min 2 instance in 1 AZ and we have 3 AZ 1,3,2 so if we add 1 it means 7 instance will create so here of max 10% or 1 instance we can create for autobalancing . 
+
+If you detach 1 ec2 then you can re calculate the max bcoz if you dont do this it will again create 1 instance .
+
+==================================
+
+You can attach one or more Elastic load balancer to ASG. 
+ELB must be in the same region of ASG.
+Once you attah LB to ASG so now new instance will automaticly register with ELB previous EC2 will not be registed with ELB. hence all EC2 should register with ELB so that it can load balance properly. 
+
+AGS and ELB both do Helath Check and send to ASG and it create based on that. 
+
+ELB and instance should be in same VPC . 
+ELB and ASG in same region .
+Grace period Health ck happens 300 sec , 5 min you can change.
+
+ASG cosider Ec2 fault if it has any state other then running. 
+we need to make both ASG and ELB Halthck on . so ELB if say its out of service means faulty. 
+
+EBS Elastic block storage and Elastic Ip will detach if instance terminate you need to re attach to new instance. 
+
+===================================
+
+Auto scaling . SNS notification : 
+Condition : 
+
+Instance launched
+Instance Terminated 
+Instance failed to Launch
+Instance Failed to Terminate.
+
+Autoscaling Merge can only be done through CLI . 
+
+Put both policies Scale out and scale In . 
+
+Launch Configuration can be edit . it can be deleted and copied. 
+
+Standby State : 
+
+You need to manualy move an instance from an ASG and put in Standby.
+Load will not go on this , it can be used like for update , sw install etc . 
+No health ck for Standby. 
+
+===================================
+
+Autoscaling policies : 
+
+MAnual : 
+min max you deside 
+
+Dynamic 
+
+Now only seeing Target Traking policy . 
+Target tracking policy : like a thermameter , like cpu is want 70% so it will always readjust . Near about to maintain at some value.
+
+
+Simple scaling policy : CPu 70 % theshold level it will create automatilcy add 2 instance . as you define that much it will increse decrease.It wont go beyound min and max same for step also.
+step scaling policy : step to be added like 50-60% add 1 instance , 70-80 add 2 instnace as same for decrease also . 
+Schedule scaling : like weekend more load . 
+
+Alarm happen through cloud watch monitoring.
+
+===================================
+
+Auto scaling Lab : 
+
+Go to EC2 
+Launch Configuration : which instance Linux/windows etc you want to create while Auto scaling is happending . once created cant edit.On demand
+
+now go to Autoscaling : 
+autoscaling can be edited 
+===================================
+
+
+
+
+ 
+
+
+
+

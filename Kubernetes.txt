@@ -1,0 +1,638 @@
+Kubernetes , K8s: Container management tool . Orchestrastaion tool (Containerization mgmt tool)
+
+previosly application were monolithic , like all thing facebook login page,news,poost story all code is in one server and interconnected and written in one go so here scaling cannot be done. 
+
+to solve this microservices has come so in microservice all service are saperate like login has its code and DB and so on and this all can be accessed via API GATEWAYS . so user can communicate and they also can communicate with each via APIs. they are loosly coupled. 
+
+Now on containers we run microservices and share it and create multiples of it.
+
+so now the problem is if you have to make 1000 container or delete 100 container so its an problem , 
+it means contianer is not able to manage . 
+
+Eg: If any match comes on hotstart so 1000 of user login it means n munber of container created and when they logout they deleted. 
+so autoscaling (scle up and down) possible by tool Kubernetes. 
+
+This is not only for dcokers its for all kind of contanerization tools it support. Docker has its own mgmt tool DOcker Swarm. But Kubernetes has many feature and can be used for any contanerization.
+
+==============================
+
+Kubernetes is Open SOurce Container Mgmt tool. which automates container deployment, container scaling and load balancing . 
+IT schedule runs and manages isolates contaners which are running on virtual/phiccal and cloud. 
+
+Problem without Kubernetes
+1. Container cant communincate with each other.
+2. Autoscaling and Load Balancing was not possible
+3. Container had to be managed carefully. 
+
+Features of Kubernetes
+
+1. Orchestrastaion : clustering of any number of container running on different network.
+2. Autoscaling (Vertical + Horizontal scaling ). 
+3. It can connect diffrent contains which are on cloud or on premises or hybrid so it support combination of all.
+4. Load balancing 
+5. platform indipent (CLoud/on Premises/physical)
+6. Fault tolerence (Pod Faiulre)
+7. Rollback (go to previous version)
+8. Health Monitoring of Container.
+9. Batch Execution (One time / Sequential / parallel)
+
+=============================
+									JSON and YAML
+Feature 							Kubernetes  			Vs 				Docker Swarm
+Installation & Configuration 		Complicated and Timetaking				Fast and Easy
+Support								Can work with all Container type		Wirk with Docker only
+									Dockr/Rocker/ContainerD	
+GUI									GUI Available							GUI Not Available
+Data Volumen						ONly share with Contaner in 			Can be shared with any container
+									same Pod					
+Updates & Rollback					yes										yes
+Autoscaling							Vertical and Horizontal both			Not
+Logging and Monitoring				InBuild tool present for monitoring		Use 3rd party tool like Splunk.
+
+===========================
+Kubernetes Architecture 
+Follows Master slave/node/worker .
+
+smallest unit in kubernetes is Pod. it only talks with pod not the containers. bcoz there could be possbility that the container are diff like docker contanerr rokcet container etc .
+In Node there could be multiple Pods. 
+
+Cluster having multiple nodes , inside Node there are Pods,  inside Pods there are containers and indise container there is application/microservice running.
+
+Master Has 4 COmponent in it . 
+
+API Server : Its like a point of contact for all like for nodes,Controller manager , kube scheduler etc . Request come to this and this forward to other who will work on it. 
+
+Control manager : It keeps actual state and desire state . Eg: Pod1 want 2 container so this Control mgr will try to give what they want . 
+
+Etcd cluster : its like DB , and COntrol manager gets infromation from this and its not a part of kubernetes . It keeps all state of pods/ip all info.
+Etcd can only accessed by API server . Key: value pair 
+
+Kube scheduler : Action it does . Work is done by this  . Contril mgr will say create 2 container it will do . handle Pod Creation and mgmt.
+If you tell in whihc node pod need to cretate it will create other wise it will see as per resource free on nodes and it will create . 
+
+Admin/dev/user(kubectl) : we also communicate with API server , User can make menifest (code in jsn or yaml file)
+
+Worker/minion side - 
+
+Pod : Atomici unit of Kubernetes.
+
+Kube let : Kubelet controls pod , it send to API server this info will go to etcd , they it go to Controller manager then kube scheduler will create .
+			port 10255
+
+kub proxy : no ip to container , Ip always with pod. POd cant communcate to another. 
+			We can create multiple Container in POD but its better to create only 1 bcoz pod has 1 ip only. and second this inside pod if many container then they are tightly coupled if one container if failed then other will also fail.
+			ip is dynamic
+			If pod is failed new will create it wont restart , new pod with diff ip . 
+			
+Container Engine : docker 
+
+All these above 3 consist Node.
+
+Cluser : Cluster is a group of node , 1 worker node and 1 master node 
+============================
+SETUP 
+
+Master should have 2 CPU and 4 GB Ram . 
+
+Setup Kubernetes : Run all commands on all 3 instance .
+
+sudo su
+apt-get update
+apt-get install https
+apt-get install apt-transport-https   This is needed for intra cluster comunication, perticulerly from control panel to Pod.
+
+
+apt install docker.io -y     install Docker on all 3 node 
+docker --version
+systemctl start docker
+systemctl enable docker
+
+sudo curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add   
+Setup a gpg key, this is for intra cluster communcation. It will be added to Source key (Communicaion btw manster and node). when ver k8s send any thing nodes will amch and accept the thing .
+
+now Download kubernetes (but we are creating in list and then downloading )
+nano /etc/apt/sources.list.d/kubernetes.list
+
+deb http://apt.kubernetes.io/ kubernetes-xenial main
+nano ctrl+ X caps Y
+
+
+apt-get update
+apt-get install -y kubelet kubeadm kubectl kubernetes-cni
+
+
+BOOTSTRAPPING THE MASTER NODE (IN MASTER) only on master
+Bootstraping is like path stablize between master and nodes.
+
+kubeadm init
+ 
+
+COPY THE COMMAND TO RUN IN NODES & SAVE IN NOTEPAD
+
+mkdir -p $HOME/.kube
+cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+chown $(id -u):$(id -g) $HOME/.kube/config
+
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/kube-flannel.yml
+
+kubectl apply -f https://raw.githubusercontent.com/coreos/flannel/master/Documentation/k8s-menifests/kube-flannel-rbac.yml
+
+CONFIGURE WORKER NODES (IN NODES)
+
+COPY LONG CODE PROVIDED MY MASTER IN NODE NOW LIKE CODE GIVEN BELOW
+
+e.g- kubeadm join 172.31.6.165:6443 --token kl9fhu.co2n90v3rxtqllrs --discovery-token-ca-cert-hash sha256:b0f8003d23dbf445e0132a53d7aa1922bdef8d553d9eca06e65c928322b3e7c0
+
+GO TO MASTER AND RUN THIS COMMAND
+kubectl get nodes
+	
+===================================================
+
+Kubernetes what every write in menifest.yml it treats each as a single object. Each work can be called as object in k8s.
+
+So desired state in menifest is called as object spec 
+and actual state as object status 
+
+Specification = desired state
+Status 	= actual state
+
+what every we create/policy/update etc can be object in k8s.
+
+Basic objects can be : 
+pod							scerets
+service						configmaps
+volume						deployment
+namespace					job
+replicaset 					documents
+
+Relationship btw objects :
+
+1. pod managees contaners
+2. replicaset manage pods 
+
+State of Object : 
+Replicas
+Iamnges
+Name
+Port 
+Volume
+Setup 
+Detached 
+
+-----------------------
+k8s Configuration
+
+Single node installion can be done for practice called minikube . just for practice not in office use in real time.
+
+Single node etcd , single master and multi worker 
+
+single node etcd , multi master and multi worker.  High availbility
+
+=======================
+Mini kube installation for practice on AWS 2 cpu instance 
+
+************Command used in Lecture*********************************
+
+sudo su
+
+Now install docker
+
+sudo apt update && apt -y install docker.io
+
+install Kubectl
+
+curl -LO https://storage.googleapis.com/kubern... -s https://storage.googleapis.com/kubern... && chmod +x ./kubectl && sudo mv ./kubectl /usr/local/bin/kubectl
+
+install Minikube
+
+curl -Lo minikube https://storage.googleapis.com/miniku... && chmod +x minikube && sudo mv minikube /usr/local/bin/
+
+apt install conntrack
+
+minikube start --vm-driver=none
+
+
+once its installed below are few commands for kubernetes
+
+kubectl version
+kubectl get nodes 
+kubectl describe node <ip>   it will give all details
+kubectl describe pod testpod 
+kubectl delete pod testpod or kuberctl delete -f pod.yml   
+
+kubectl apply -f pod.yml 	 if you have updated any thing in yml and then you want it to apply. 
+
+kubectl get pods  if its showing 2/2 it menas it has 2 containers 
+
+kubectl logs -f podname 						it will give error but it will show contner names
+
+kubectl logs -f podename -c contanername 		to check whats is running in container 
+
+kubectl exec podname -c contanername -- hostname -i   it will give ip of pod bcoz contaer donest have ip 
+
+kubectl exec podname -it -c contanername -- /bin/bash   to go inside container 
+
+=============================
+
+Labels and Selectors:
+
+Label Puts on Object , Object could be your pod , Node any thing . SO you label pod like tomcat application runing on this pod so you can label pod as tomcat . 
+Label : to organize kubernetes objects.
+label is key vlaue pairs.
+Multiple label to single object.
+Lable comes in metadata.
+-------
+
+kind: Pod
+apiVersion: v1
+metadata:
+  name: delhipod
+  labels:                                                   
+    env: development
+    class: pods
+spec:
+    containers:
+       - name: c00
+         image: ubuntu
+         command: ["/bin/bash", "-c", "while true; do echo Hello-Bhupinder; sleep 5 ; done"]
+		 
+-------
+kubectl apply -f pods.yml
+kubectl get pods --show-labels
+
+imperetive method : via command label on existing pod 
+
+kubectl label pod mypod myname=manu
+kubectl get pods --show-labels
+
+List pods matching lebel 
+kubectl get pods -l env=evelopment
+
+Not present 
+kubectl get pods -l env!=evelopment
+
+Delete with level name 
+kubectl delete pods -l env=evelopment
+
+3 Mentoh to delete pod 
+1. delete commnnd
+2. delete yml 
+3. delete via label
+
+Label doesnot provide uniqueness , you can give same leabel to many pods.
+
+selectors : and to get thoese specific object with there label we use selectors . to select those label and fetch them .
+
+the api currently support 2 type of selectors 
+1. equality baesed selector = 
+2. set based eg: env in (development,prod,mkt)
+
+set based (in,notin and exist)
+
+kubectl get pods -l class=pods myname=manu
+kubectl get pods -l 'env in (development,testing)'
+kubectl get pods -l 'env notin (development,testing)'
+==================================
+
+Node-Selector:
+
+you are specifying on which node you want to create pod . supose you give a condition create pod on t2.medium size node only .
+but if all nodes are t2.medium then it will create on which ever it will find resources available/free. 
+
+first you need to label on that node then write node-selector in yml then pod will create in that label node only. 
+
+NODE SELECTOR EXAMPLE
+
+kind: Pod
+apiVersion: v1
+metadata:
+  name: nodelabels
+  labels:
+    env: development
+spec:
+    containers:
+       - name: c00
+         image: ubuntu
+         command: ["/bin/bash", "-c", "while true; do echo Hello-Bhupinder; sleep 5 ; done"]
+    nodeSelector:                                         
+       hardware: t2-medium
+	   
+IFrst create node label on that node then only it will success 
+kubectl label nodes nodename hardware=t2-medium
+
+===============================
+
+Scaling and Replication 
+
+Replication : if one pod failed then other will give service , in yml replica=2 so 2 pods will create . 
+
+Scaling : scale up/down : so if many user come at same time so incere and decrese.best exapample if hotstar/netflix so for each user they have 1 pod and if user increate pods will create and in every pod there is container and contaner has saperate application of movie / cricket. so pod create and delete. in the last which are create will be deleted first. 
+
+Replication Controller : its a object It enable you to create multiple pod, this make sure number of pod always exist. help in crash,faild, terminate 
+replica = 1 menas only 1 pod , 2 means 2 pods
+
+template means what do you want to create in that replicas .
+
+EXAMPLE OF REPLICATION CONTROLLER
+
+kind: ReplicationController               
+apiVersion: v1
+metadata:
+  name: myreplica
+spec:
+  replicas: 2            
+  selector:        
+    myname: Bhupinder                      
+  template:                
+    metadata:
+      name: testpod6
+      labels:            
+        myname: Bhupinder
+    spec:
+     containers:
+       - name: c00
+         image: ubuntu
+         command: ["/bin/bash", "-c", "while true; do echo Hello-Bhupinder; sleep 5 ; done"]
+
+kubectl describe rc myreplica
+
+To Scale up 
+
+kubectl scale --replicas=8 rc -l myname=Bhupender
+
+kubectl get rc 
+
+kubectl get pods 
+
+===========================
+
+Replica Set : 
+
+Replica contrller only supports equality based selector .
+
+replica set is set based 
+
+kind: ReplicaSet                                    
+apiVersion: apps/v1                            
+metadata:
+  name: myrs
+spec:
+  replicas: 2  
+  selector:                  
+    matchExpressions:                             # these must match the labels
+      - {key: myname, operator: In, values: [Bhupinder, Bupinder, Bhopendra]}
+      - {key: env, operator: NotIn, values: [production]}
+  template:      
+    metadata:
+      name: testpod7
+      labels:              
+        myname: Bhupinder
+    spec:
+     containers:
+       - name: c00
+         image: ubuntu
+         command: ["/bin/bash", "-c", "while true; do echo Technical-Guftgu; sleep 5 ; done"]
+
+
+kubectl get rs 
+
+kubectl get pods
+
+kubectl scale --replicas=1 rs/myrs
+========================
+
+Kubernetes Deployment & Rollback 
+
+Deployment : Deployment Does Rollback and Rollout, 
+Deploymwnt is above Replicaset , this is also an object, 
+so suppose if you have 1 replicaset v1 (with 2 pods )and you made another replicaset V2 (with 3 pods) and if you do rollback from v2 to v1 so number of POD WILL BE 3 Only theny wont  reduce.  
+
+Deployment --> ReplicaSet -> Pod    deployment will not directly in tract to pods . 
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+   name: mydeployments
+spec:
+   replicas: 2
+   selector:     
+    matchLabels:
+     name: deployment
+   template:
+     metadata:
+       name: testpod
+       labels:
+         name: deployment
+     spec:
+      containers:
+        - name: c00
+          image: ubuntu
+          command: ["/bin/bash", "-c", "while true; do echo Technical-Guftgu; sleep 5; done"]
+		  
+		  
+kubectl apply -f deploy.yml
+kubectl get deploy 
+
+kubectl describe deploy mydeployment 
+
+kubectl get rs 
+
+kubecrl get pods 
+
+kubectl logs -f podname 				it will show techgugu prints
+
+kubectl exec podname -- cat /etc/os-release 
+
+kubectl rollout history deployment mydeployment    to ck howm maytimes we changed
+kubectl rollout status deployment mydeployment 		it will roll out to previous version 
+kubectl rollout undo deploy/mydeployment
+===================================
+
+Kubernetes Networking 
+
+
+COmunication Btw 2 Containers in single POD : 			via localhost it wil happen
+
+If we have multiple COntaner in pod so they communicate via localhost they dont have any ip. 
+
+apply this below and go inside container c00 and try to access another c01 container. 
+
+kubectl exec testpod -it -c c00 -- /bin/bash
+
+communication will happen iva curl 
+
+apt install curl 
+
+curl localhost:80    it works it will show it menas communicaton happening 
+
+
+kind: Pod
+apiVersion: v1
+metadata:
+  name: testpod
+spec:
+  containers:
+    - name: c00
+      image: ubuntu
+      command: ["/bin/bash", "-c", "while true; do echo Hello-Bhupinder; sleep 5 ; done"]
+    - name: c01
+      image: httpd
+      ports:
+       - containerPort: 80
+	   
+================
+
+Comunication Btw 2 POD in single NOde : 			via pod ip it wil happen
+
+create 2 pods 
+kubectl get pods -o wide 
+
+curl pod1ip:80
+curl pod2ip:80
+
+==================
+
+Services : 
+
+Problem : if you are accessign the app from container podip:80   and if pod deleted and replicaset is 1 so new pod will create but ip will change and app will not be accessble 
+
+Solution : services 
+
+services-> Replicaset , it will provide vertual Ip to replicaset . 
+so now virtiual ip will be given to pods also and pod hs its own ip so virtaul ip will link with it and if any time user go via virtau Ip with port it will be able to access pod app. 
+
+even if pod will deleted so new ip will already map with Virtl ip .
+
+mainly used in Replica controller , replica set . 
+
+service is logical bridge btw pod and end user with Virtual ip. 
+
+pod ip is not exposed out side node by default.
+
+Service helps to expose the VIP mapped to pods and allow application to receive traffic . 
+
+Label are used to select which pod to be put under Services. 
+
+Service has 4 types 
+
+Cluster ip 
+Nodeport
+Load balancer 
+headless 
+
+service will always give port number from 30000-32767 only 
+
+Loadbalancer --> Nodeport --> Clusert ip 
+
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+   name: mydeployments
+spec:
+   replicas: 1
+   selector:      # tells the controller which pods to watch/belong to
+    matchLabels:
+     name: deployment
+   template:
+     metadata:
+       name: testpod1
+       labels:
+         name: deployment
+     spec:
+      containers:
+        - name: c00
+          image: httpd
+          ports:
+          - containerPort: 80
+		  
+-----
+
+kind: Service                             # Defines to create Service type Object
+apiVersion: v1
+metadata:
+  name: demoservice
+spec:
+  ports:
+    - port: 80                               # Containers port exposed
+      targetPort: 80                     # Pods port
+  selector:
+    name: deployment                    # Apply this service to any pods which has the specific label
+  type: ClusterIP                       # Specifies the service type i.e ClusterIP or NodePort
+
+$ kubectl get svc
+
+so ck it will have cluser ip : 80 and apache will be accessed. 
+
+===============
+
+NodePort : Access via internet the application 
+
+INternet > Notepod > cluster ip > port 
+
+  type: NodePort                       # Specifies the service type i.e ClusterIP or NodePort
+  
+go to aws dns and put port number 
+
+===================
+
+Volume : 
+
+Accessting by 2 contaner with in pod . 
+
+Volume is attached to pod and share among the Contaners. 
+
+If contaner will fail Volume will be there but if Pod will failed volume will also delete.
+
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myvolemptydir
+spec:
+  containers:
+  - name: c1
+    image: centos
+    command: ["/bin/bash", "-c", "sleep 15000"]
+    volumeMounts:                                    # Mount definition inside the container
+      - name: xchange
+        mountPath: "/tmp/xchange"          
+  - name: c2
+    image: centos
+    command: ["/bin/bash", "-c", "sleep 10000"]
+    volumeMounts:
+      - name: xchange
+        mountPath: "/tmp/data"
+  volumes:                                                   
+  - name: xchange
+    emptyDir: {}
+	
+apply this 
+and go to contaner 1 and go to /tmp/xchange and create file and now go to other contaner and ck /tmp/data you will see files here also . 
+
+================================
+Hostpath 
+
+Accesing volume by 2 different pods 
+
+apiVersion: v1
+kind: Pod
+metadata:
+  name: myvolhostpath
+spec:
+  containers:
+  - image: centos
+    name: testc
+    command: ["/bin/bash", "-c", "sleep 15000"]
+    volumeMounts:
+    - mountPath: /tmp/hostpath
+      name: testvolume
+  volumes:
+  - name: testvolume
+    hostPath:
+      path: /tmp/data 
+
+=====================================
+
+
+
+

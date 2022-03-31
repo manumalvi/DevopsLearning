@@ -1,0 +1,348 @@
+Note: Install docker and use below docker commands to run a Linux cotainer:
+docker run -it ubuntu:16.04 /bin/bash 
+
+httpd is the same as apache2. It depends on the OS you use. For example in RHEL 6.2 it is called httpd and in Ubuntu it is called apache2.
+
+sudo su = super user do Switch user 
+
+Linux Commands: 
+
+1. Cat :
+
+	Cat Uses :                      # create file #concatinate file (main work of cat) #copy file #tac (bottom to up it will show)
+	cat > file1						# File Creation
+	cat >> file1 	  				# To add more content in file1
+	cat file1 file2 > file3		    # Flie1 and File2 will be concatinate to file3
+	
+------------------------------------
+2. Touch :
+ 
+	#create empty file # multiple files # change all time stamp of file (main work) #update only access time
+	3 time stamps : access time -a , modify time  -m , change time  
+
+	$ stat file1	   #To check all 3 stamp
+
+    $ touch file1      #It wil update all time of created file
+
+    $ touch -a 		   #File1 only access time will update.
+	
+	$ touch .file      #It will create hidden file and to show it ls -a
+	
+------------------------------------
+3. Nano save: ctrl+x Y Enter
+
+------------------------------------
+4. $mkdir -p dir1/dir2/dir3  #It wil create 3 dir inside each other
+
+------------------------------------
+5. $yum install httpd ; service httpd start but if machine stutdown it will stop so do chkconfig httpd on it will automaticly start once system is on.
+
+------------------------------------
+6. $ which tree      # To check where is the command package is installed or not
+ 
+------------------------------------
+7. $ whoami          # root or any other user 
+
+------------------------------------
+8. $ echo "what is your name" > filename 	# echo can also create filename 
+
+------------------------------------
+9. $ echo > filename 		  # It will empty the filename
+------------------------------------
+
+10. $ grep root /etc/passwd   # To find out root word into file , used for finding errors etc in logs.
+------------------------------------
+
+11. $ sort file               # It arrange in alphabetical order 
+------------------------------------
+
+12. $ less/more filename	  # To read content of a File (less 1 page at a time), to quit q 
+------------------------------------
+
+13. $ head/tail filename 	  # Top 10 lines / last 10 lines 
+------------------------------------
+
+14. $ cat /etc/os-release	  # OS details, for other linux distributions cat /etc/*release
+------------------------------------
+
+15. $ yum list installed	  # Installed Packages
+------------------------------------
+
+16. $ tar -cvf file.tar file  # Linux tar = Windows zip,  -cvf (create,verbose,force) xvf Extract
+
+	$ tar -xvf file.tar		  # gzip file.tar
+------------------------------------
+17. cd ~   					  # User Home Directory	
+------------------------------------		 
+
+18. dpkg -l 				  # Output a list of all installed packages on a Debian-based system.
+------------------------------------
+
+19. Commands to check how much memory is being used by Linux
+		
+	free -m
+	vmstat
+	top
+	htop
+------------------------------------
+20. ps aux 					  # List all the processes by all users on the current system
+------------------------------------
+21. scp file.txt remote_username@10.10.0.2:/remote/directory
+
+    scp -r /local/directory remote_username@10.10.0.2:/remote/directory
+------------------------------------
+22. $ du -sh /var/log/*       # Command to check the size of file or directory
+------------------------------------
+
+23. $ find /home -name tecmint.txt   # The find command helps us to find a particular file within a directory.
+------------------------------------
+24. sed : For searching, find and replace, insertion or deletion. 
+
+	cat > hello.txt
+	linux is os , linux is good.
+
+	sed 's/linux/unix/' hello.txt
+
+	sed 's/linux/unix/2' hello.txt	# wanted to change n th occurence.
+
+	sed 's/linux/unix/g' hello.txt  # global replacement 
+------------------------------------
+25. link :
+
+    hardlink : ln means hard link , For backup
+
+    softlink : ln -s soft link, it like shotcut eg on windows desktop shotcuts, to quick access, if you remove orginal file then softlink will also be removed.
+
+	# ln -s orgfile softlinkfile # If you update any thing in softlinkfile then it will update in org 
+	# ls -l 				     # softlinkfile > orgfile  
+	 
+	Hardlink : Create Hardlink it for backup but its kind of backup sync, sync from both file vice versa. Deleteting one File wont imapct another.
+
+	# ln orgfile hardfile
+-----------------------------------
+26. awk
+
+	root@3308c3a7e4ba:/# cat >  manu.txt
+	ajay manager account 45000
+	sunil clerk account 25000
+	varun manager sales 50000
+
+	root@3308c3a7e4ba:/# awk '{print $1,$4}' manu.txt
+	ajay 45000
+	sunil 25000
+	varun 50000
+
+	root@3308c3a7e4ba:/# awk '/manager/{print}' manu.txt
+	ajay manager account 45000
+	varun manager sales 50000
+
+	root@3308c3a7e4ba:/# awk '{print NR "- " $1 }' manu.txt
+	1- ajay
+	2- sunil
+	3- varun
+-----------------------------------
+27. netstat -tulpn		   # TO Check the all Ports 
+	netstat -antplF        # To Check open port 
+	nmap -open 172.17.0.2  # Give your IP to check ope port for local or global
+-----------------------------------
+	
+28. traceroute 8.8.8.8     # It will show from how many hops trafic going and you can receive route ip of each in the route till destination.
+----------------------------------- 
+
+$ useradd /etc/passwd
+$ groupadd /etc/group
+r = 4 , w = 2 x =1   User Group Other 
+
+wget : wget <url>
+to download a software 
+
+then you can do yum install
+
+===============================================================================================================================
+
+										Basic Linux Shell Scripting
+										
+
+Types of shells:
+Primaryly there is two types of shell:
+Bourne shell − If you are using a Bourne-type shell, the $ character is the default prompt. 
+It has sub categories: Bourne shell (sh), Korn shell (ksh), Bourne Again shell (bash), POSIX shell (sh)
+
+C shell − If you are using a C-type shell, the % character is the default prompt. 
+Subcategories: C shell (csh), TENEX/TOPS C shell (tcsh)
+
+To check which shell you are using run below command:
+echo $SHELL
+
+#!/bin/bash  
+echo "Hello World"  
+
+----------------------------------
+Variable in Shell Scripting:
+
+File name: test.sh
+
+#!/bin/bash  			
+NAME="manu"
+echo $NAME
+echo "$NAME"
+echo "${NAME}!"
+
+					output : 
+					root@c956b7001f5f:/# ./test.sh
+					manu
+					manu
+					manu!
+
+-----------------------------------
+Interactive shell script:
+
+filename: test_2.sh 
+
+#! /bin/bash
+echo "Your First Name?"
+read a
+echo "Hi $a, Your Last Name"
+read b
+echo "Thanks $a, Your full name is $a $b for telling us your name"
+
+																	output : 
+																	root@c956b7001f5f:/# ./test.sh
+																	Your first name
+																	manu
+																	HI manu , your last name?
+																	malvi
+																	Thanks manu , your full name is manu malvi for telling us your name
+
+-----------------------------------
+Conditions if else 
+
+#!/bin/bash
+
+read name
+
+if [ $name == "manu" ]
+then
+  echo "how are you manu"
+else
+  echo "yu enter wrong name"
+fi
+-----------------------------------
+
+Funtions: 
+
+#!/bin/sh
+
+# Define your function here
+Hello () {
+   echo "Hello World"
+}
+# Invoke your function
+Hello
+
+
+#!/bin/bash
+
+test() {
+    echo "hii"
+    echo $1
+    echo $2
+}
+test  "asdf"  "sdf"
+
+./filename
+-----------------------------------
+
+Argumets and their meaning
+$#	Number of arguments
+$*	All arguments
+$@	All arguments, starting from first
+$1	First argument
+$?  Was Last command Successful 0. 
+$0  File name itself 
+
+#!/bin/bash
+get_name(){
+ echo "manu $1"
+}
+get_name "yahoo"
+
+or 
+
+# Same as above (alternate syntax)
+function myfunc() {
+    echo "hello $1"
+}
+myfunc "Sandip"
+
+------------------------------------
+#!/bin/bash
+
+test() {
+    echo "Total arguments are $#"
+    echo "Total arguments are $*"
+	echo "Total arguments are $@"
+    echo "Total arguments are $0"
+	echo "Total arguments are $1"
+    echo "Total arguments are $?"
+}
+test 1 2 3 4
+
+									output:
+									root@3308c3a7e4ba:/# ./manuhard
+									Total arguments are 4
+									Total arguments are 1 2 3 4
+									Total arguments are 1 2 3 4
+									Total arguments are ./manuhard
+									Total arguments are 1
+									Total arguments are 0
+-------------------------------------
+
+Raising errors:
+myfunc() {
+  return 1
+}
+if myfunc; then
+  echo "success"
+else
+  echo "failure"
+fi
+
+					output:
+					failure
+					
+return value is stored in $?
+#!/bin/sh
+
+test_return()
+{
+a=10
+return $a
+}
+
+test_return
+echo $?
+
+					output:
+					10
+-------------------------------------
+Loops:
+
+for i in $*;do
+	echo $i
+	done
+	
+for i in {1..5};do
+	echo $i
+	done
+	
+-------------------------------------
+
+Write a bash script to delete all the files in the current directory that contains the word “linux”.
+for i in *linux*; do rm $i; done
+
+
+
+
+
+

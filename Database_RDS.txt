@@ -1,0 +1,98 @@
+No SQL is without structure to link data. It has low cost HW , Faster .
+Horizonontal Autoscaling is possible . 
+No fix column structure, schema free , suiable for analytical processing .
+Data warehouse online analytical processing , DB is online transcation processing. 
+MOngaDb , casandra , DynamoDB etc 
+
+Type of NoSQL DB 
+
+Column DB : it saves data in columns , eg casandra , Hbase.
+Document DB : data in document form json,xml eg, MongoDB 
+Key value DB : unique key value will be there primary key  eg redis DynamoDB , keeps data in cache memory and keep session also.
+Graph base DB : for graph base data like maps 
+
+==============================================
+
+AWS  manages following things for Relational DB  : 
+
+1. Security & pathcing 
+2. Automated Backup
+3. Software updates
+4. If multi AZ selected then it will automaticly handle failover for standby.
+5. Every DB has maintinance window. 
+
+Managed y user
+
+1. DB managing setting
+2. DB schema 
+3. DB performance 
+
+Options of Realtion DB in AWS : 
+1. My SQL server
+2. My sql 
+3. Oracle
+4. AWS Aurora : High Throuput
+5. Postgre SQL : High reliable and stable open source 
+6. Maria DB 
+
+** DB uses EBS storage only. 
+
+==============================================
+
+Multi AZ in RDS:
+
+1. while creating only multi AZ can be enabled. not in free tier. 
+2. you cant add standby AZ in which region you want.
+
+Conditions for failover 
+1. primary DB failed
+2. AZ itself failed
+3. COnnectivity network issue with primart.
+4. Primary EC2 Failed
+5. Storage of DB failed
+6. Patching of OS done
+7. rebooting of instance 
+
+What happend in Failover : 
+
+we do not give IP we give CNAME Cronical Name record 
+CNAME is inside DNS 
+CNAME is always updated to all ip .
+Enadpoint is needed to access not ip 
+==============================================
+1. When every Failover SNS notification will go . 
+2. CLI / API for 14 days you can ck failover but on console only see 1 day. 
+3. ANy patching any update first will happen on Standby . if you will take on active then outage will happend of DB.
+4. Snapshot or backup standy by will be used for it .
+5. IMP : Backup stored in s3 
+6. retention persiod means for how many days you will have bk copy. dont want backup retention put 0.
+==============================================
+Lab : 
+Create a DB and create ec2 instance and access through it by RDS endpoint . linux CLI method 
+Create a DB and install DB client and then connect this with DB now you can ck the tables of DB . DB client access. 
+
+==============================================
+
+DynamoDB : 
+
+Max on internet is unstructured data. DynamoDB is for unstructured or semi structured Data. 
+
+DynamoDB table its collection of item. Item is group of attribute. 
+Attribute consist of name and value (key,value)
+Aggribate size of an item is max 400 kb . if its more that 400kb then put in s3 bkt and url of s3/pointer put here. 
+DynamoDB stores data index by primary key, you specify primary key when create table. 
+Primary key is only reqiuired attribute in table. 
+DynamoDB schema less. 
+
+Read Capacity unit : 
+Evantually Consistent : give upto ful updated value . 2rcu = 8 kb . cheap, fast
+Strongly consistent :   1RCU = 4 kb  in same price of eventully. expensive , most chances of getting updated data . 
+
+DynamoDB is for more read and less write applications. 
+===========================================
+
+DynamoDB has primary key as sring , number and binary key . 
+
+
+
+

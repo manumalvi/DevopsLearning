@@ -1,0 +1,100 @@
+Elastic compute cloud : 
+
+EC2 : Elastic Compute cloud
+
+SG security grp : INGRESS : who can access my machine what i have in my machine.
+				  EGRESS  : Who can you access is Egress
+				  VPC : Virtual public cloud : Internal Intranet 
+				  you can give acccess to ingree and egree at network level or ec2 level
+				  
+pay as you go 
+
+most of production deployment are in linux
+
+to check EBS volume in linux : [ec2-user ~]$ lsblk 
+
+linux package mgr is yum , apt-get 
+
+for download in linuc its wget , curl 
+
+==============================================
+Ec2 has 2 storage EBS , Instance store (Fast)
+EC2 Limit : 20 Instances Per Region , above this you need to request . With 2 default high I/O instances.
+
+Types of Ec2 Instances : Total 7 
+General Purpose :	Balanced memory and CPU   M series (Large , M5 has largest RAM ), A series (Medum ,large instances) , T series  (nano , micro , medium large )
+					Balance of all memory,network and compute. 
+					T2/T3 used for webserver , repository 
+					
+Compute Optimize: 	More CPU ( C series C4 ,c5 ,c5n )  for high performence processor. Batch Procesing , Gaming , video encoding , High Performance Webser
+
+Memory Optimize:	More RAM (R , X , Z series), used for large Data sets , data , sql/no sql data both More RAM 16-768 GB ram size 
+
+Accelerated computing / GPU : Graphics optimisez  (P , G ,F series) used in Live string , fb , youtube , 3d gamies etc , ML , AI , Deep learning , 								Graphics intensive 
+
+Storage Optimize : Low latancy  (D < I <H series ) sequential read and write access eg songs.pk , music sites , video sites 
+
+High memory Optimize: High Ram Nitro System (Specilized hyperviser) Dedicated Host for 3 yrs no virtualization in this . No Hiperviser in this . Bare metal means direct OS install on hard ware .   biggest memory 12 TB ram 
+=============================================
+EC2 Purchasing options : 
+On Demand Instanace		: our t2 are instace on demand instances 
+Dedicated Instanace
+Spot Instanace												cheepest instance 
+Dedicated Host 
+Schedule Instanace		Time Fix 4 hrs daily 
+Reserved Instanace 	1 to 3 year reserve						cheper instance 
+
+=============================================
+
+Ec2 Access : 
+
+1. You need a key and pair name
+2. you can download private key only once and public key saved by AWS 
+3. Every 1 min EC2 ck instance pending , running every 5 min it send data to cloud watch 
+4. You can enable 1 min monitoring but uts chargable 
+5. If Ec2 stopped no changes but if EBS attached then it will charge. 
+IMP (EBS backed Ec2 instance means Root volume is EBS OS in EBS and if Instance store backed Ec2 OS in Instanace)
+
+
+When you stop EBS backed Ec2 : 
+1. Instanace perform a shutdown. running -> stop 
+2. EBS will remain attached . EBS is network attached storage 
+3. Instance retain its private ip and release public IP 
+4. Instance retain Elastic IP 
+
+
+EC2 Termination 
+1. running->shutting down->Terminated
+2. By default EBS root volume are deleted automaticly when ec2 are terminated.
+3. If you dont want to delete you can uncheck Delete on Termination
+4. Ec2 Termination Protection we can enable if its very imp. 
+
+Ec2 Meta data 
+Instace data that you can manage Eg : ip address , DNS ,AMI , instace ID , host name , public key , SG 
+Metadata is not encrypted 
+if you want to see your instance meta data http://169.154.169.154/latest/metadata/
+
+Instance User data 
+Data supplied by user at instance launch in form of script during launch instance . 
+its limited to 16k
+you can change User data by stopping ec2 first. 
+UD is not encrypted. 
+
+EBS Elastic Block Storage 
+EBS you can take snapshot and move it in AZ. 
+**EBS attached when instance launch when Ec2 terminated its deleted 
+**Running Instance if EBS atachend then it wont delete on termination. 
+
+Instance Storage 
+Data not lost when rebooted instnace 
+you cant detach attach this 
+Instanace is stop or terminated data lost 
+
+===================================
+Lab : 
+Ec2->Windows server->install IIS -> make any index.html in wwwroot and now access from public ip .
+
+Lab: create ec2 instance and login by putty and check metadata by command 
+instance meta data http://169.154.169.154/latest/metadata/
+
+===================================

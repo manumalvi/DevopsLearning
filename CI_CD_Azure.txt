@@ -1,0 +1,253 @@
+CI/CD Azure 
+
+First need for Continious Integration or Continious delivery or Continious Deployment is to get quick feed back , u will find probles early. 
+u will get immidiate feed back . 
+
+Continious Integration   commit code(Git)->triget job (jenkin / city)-> which will download code to local ->build mgr (maven)->unit test-> static analysis(sonar que)-> then create docker image or merge code in release bracnh or deploy on dev env and call CI is DONE
+MOre towards develper
+
+s oafter CI you do intigration test ing -> performence test->security test -> certification -> delivery (some early bird cust)-> and if deploy to prod its called Cont Deployemtn
+
+Commit code -> unilt Test->code quality->package->Intergarion Test 
+
+Continious deployent 
+
+Commit code -> unilt Test->Intergarion Test ->Package ->Deploy ->Automated Test (like smoke test)
+
+continious Delivery
+
+Commit code -> unilt Test-> Intergarion Test ->Package ->Deploy ->Automated Test (like smoke test)-> Testing Apprioval -> Deploy Next (to production )
+
+most propular tools for this is Jenkins and Azure Devpos 
+
+So each of the above step in a pipeline so need to create pipe lines 
+
+so we need to CI pipeline or CD pipeline 
+
+for Code Commit : Github 
+for unit test is for  test function and classes frameswork used  : in java junit  moca , in python pyTest
+for intergration test frameswork : cucumber , selenium , protractor , here we right auto test for few module intergat togather 
+package : here build deployable unit for application npm , pip for python , maven for java
+deploy : once pkg ready you can deploy it to enviroments either using jenkins or azure devops 
+automates test : they are smoke test or load performace test etc .. 
+test approval : if it approve for testing then will deploy to like UAT or if it approved in UAT will deploy to production 
+
+Azure Devops 
+
+The most imp feature azure devops provide is pipelines , and that enable you to do Continious intigration and con deployment 
+
+Azure devops previously called as Visual studio Team services (VSTS)
+
+you have to go to azure devops in there give org name and project name and multistage pipeline enable in setting (by default its enable now)
+
+1. go to git hub and create new repo give name and create 
+2. now we need to commit code in repo 
+3. create a folder on local HD with same name of repo (my_learning_project_pipeline)
+C:\Users\mmalvi\Desktop\my_learning_project_pipeline>git remote add origin https://github.com/manumalvi/my_learning_project_pipeline.git
+error: remote origin already exists.
+
+C:\Users\mmalvi\Desktop\my_learning_project_pipeline>git branch -M main
+
+C:\Users\mmalvi\Desktop\my_learning_project_pipeline>git push -u origin main
+Enumerating objects: 51, done.
+Counting objects: 100% (51/51), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (41/41), done.
+Writing objects: 100% (51/51), 11.14 KiB | 600.00 KiB/s, done.
+Total 51 (delta 0), reused 0 (delta 0), pack-reused 0
+To https://github.com/manumalvi/my_learning_project_pipeline.git
+ * [new branch]      main -> main
+Branch 'main' set up to track remote branch 'main' from 'origin'.
+
+C:\Users\mmalvi\Desktop\my_learning_project_pipeline>
+
+these now you can see all files in your git repo 
+
+Create pipeline in Azure devops
+
+go to create repo and choose github and after credential give chosse your repo which you created earler
+
+review your pipeline - save and run then you will see that yml file in github repo 
+
+----------
+
+change in some yml file in git and then run this commsnd to push into repo
+
+C:\Users\mmalvi\Desktop\my_learning_project_pipeline>git add *
+
+C:\Users\mmalvi\Desktop\my_learning_project_pipeline>git commit -m "hello world updated"
+[main 6a8a542] hello world updated
+ Committer: Malvi <mmalvi@rcinnet.rockwellcollins.com>
+Your name and email address were configured automatically based
+on your username and hostname. Please check that they are accurate.
+You can suppress this message by setting them explicitly. Run the
+following command and follow the instructions in your editor to edit
+your configuration file:
+
+    git config --global --edit
+
+After doing this, you may fix the identity used for this commit with:
+
+    git commit --amend --reset-author
+
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+C:\Users\mmalvi\Desktop\my_learning_project_pipeline>git push -u origin main
+Enumerating objects: 5, done.
+Counting objects: 100% (5/5), done.
+Delta compression using up to 12 threads
+Compressing objects: 100% (3/3), done.
+Writing objects: 100% (3/3), 317 bytes | 317.00 KiB/s, done.
+Total 3 (delta 2), reused 0 (delta 0), pack-reused 0
+remote: Resolving deltas: 100% (2/2), completed with 2 local objects.
+To https://github.com/manumalvi/my_learning_project_pipeline.git
+   001100f..6a8a542  main -> main
+Branch 'main' set up to track remote branch 'main' from 'origin'.
+
+C:\Users\mmalvi\Desktop\my_learning_project_pipeline>
+
+so Now after commit go to github and check changes which you made from Visual studio
+
+and if you go to pipeline there is one job ran aftr this commit and u can see changes 
+means pipeline has run once more for commit 
+
+understand yml 
+
+When do you want to run this pipeline : 
+
+trigger:
+- main
+
+it means if you make any change on the master this build will trigger 
+
+where do you want to run this pipeline (your mahine servers )
+
+pool:
+  vmImage: ubuntu-latest
+
+in azure step is nothing but simple tasks what you wnat ot do 
+
+steps:
+- script: echo Hello, world! changed
+  displayName: 'Run a one-line script'
+
+
+- script: |
+    echo Add other tasks to build, test, and deploy your project.
+    echo See https://aka.ms/yaml
+  displayName: 'Run a multi-line script'
+
+this pipe symbol is for multiple lines 
+
+Pipeline > Stage > Jobs > Task(steps)
+
+if you have more then 1 job then you need to specify the jobs 
+
+jobs:
+- job: job1
+  steps:
+  - script: echo Hello, world! job 1
+    displayName: 'Run a one-line script'
+
+  - script: |
+      echo Add other tasks to build, test, and deploy your project.
+      echo See https://aka.ms/yaml
+      echo more info
+    displayName: 'Run a multi-line script'
+
+- job: job2
+  steps:
+  - script: echo Hello, world! JOb 2  
+    displayName: 'Run a one-line script'
+	
+it means 1 job will run on one virtual server or agent and second on another 
+if no dependency btw jobs so jobs will run parallel 
+
+- job: job2
+  dependsOn: job1
+  steps:
+  - script: echo Hello, world! JOb 2  
+    displayName: 'Run a one-line script'
+- job: job3
+  dependsOn: job2
+  steps:
+  - script: echo Hello, world! JOb 3  
+    displayName: 'Run a one-line script'
+ so they are sequence now 
+ 
+or you can do like job 2 dep on job 1 job 3 depend on job 1 job 4 depend on job 2 and jo 3
+
+Createing another pipeline with same code yml to understand stages
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+- stage: Build
+  jobs:
+  - job: Firstjob
+    steps:
+      - bash: echo build Firstjob
+  - job: Secondjob
+    steps:
+      - bash: echo build Secondjob
+- stage: DevDeploy
+  jobs:
+  - job : DevDeploy
+    steps:
+    - bash : echo build DevDeploy
+- stage: QADeploy
+  jobs:
+  - job : QADeploy
+    steps:
+    - bash : echo build QADeploy
+- stage: productionDeploy
+  jobs:
+  - job : productionDeploy
+    steps:
+    - bash : echo build productionDeploy
+	
+Stages will run only after previous stage is completed 
+
+IF you want to deend one staege on another then do 
+
+trigger:
+- main
+
+pool:
+  vmImage: ubuntu-latest
+
+stages:
+- stage: Build
+  jobs:
+  - job: Firstjob
+    steps:
+      - bash: echo build Firstjob
+  - job: Secondjob
+    steps:
+      - bash: echo build Secondjob
+- stage: DevDeploy
+  dependsOn: Build
+  jobs:
+  - job : DevDeploy
+    steps:
+    - bash : echo build DevDeploy
+- stage: QADeploy
+  dependsOn: Build
+  jobs:
+  - job : QADeploy
+    steps:
+    - bash : echo build QADeploy
+- stage: productionDeploy
+  dependsOn:
+  - DevDeploy
+  - QADeploy
+  jobs:
+  - job : productionDeploy
+    steps:
+    - bash : echo build productionDeploy
+	
+we have creeate one more pipeline 1st pilpelen so that is also working bcoz its from same git repo so go to setting for that pipeline and do disable for that 

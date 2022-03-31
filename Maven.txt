@@ -1,0 +1,54 @@
+Maven is a Project Management tool . java project . This is key feature of maven.
+
+Maven is a Build Tool . 
+Maven manages Dependencies. 
+
+OSS devops : all tools are open source Open source devops. 
+
+maven is an application and proje mgmt tool developed by apache its based on POM.xml File. (Project Object model)
+
+To download dependencied no need to go to there websitses , easily done by mvnrepositories.com 
+
+Reposiroires : package of .jar files
+
+Build Tool :
+c, c ++ : make File
+.Net :	Visual Studio
+java : Ant,Maven,Gradle
+
+Proeblem without maven 
+
+1. Adding set of jar in each Project manual its dificult
+2. Creating the right project structre 
+3. Building and deploying project 
+
+Maven helps to manager
+Build
+Dependencies
+Report 
+release
+Distribution
+
+POM.xml 
+
+Metadata 
+dependencies
+kind of project
+kind of output 
+description
+
+
+1 POM will have for 1 project 
+
+.M2 is kind of local repo place in your pc once you install maven it will be created. if dependency is not here then it will bring from remote repo and if not find then central repo mvnrepositories.com  
+
+Maven Build Life Cycle : 
+
+1. Generate resource (Dependencies)
+2. Compile code
+3. unit test
+4. package (Build)
+5. Instll
+6. deploy 
+
+

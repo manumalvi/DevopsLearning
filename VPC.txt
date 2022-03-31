@@ -1,0 +1,377 @@
+VPC : Virtual private Cloud
+
+suppose multiple apps are there for multiple clients so every one need privacy bcoz all apps are in same AWS data center hence to provide more privacy
+AWS use VPC . VPC is kind of virtual ata center it a virtual network . 
+
+so some application has to be used by public and some application they want it cant be used by public they want privacy .
+so based on subnet you can deside which subnet is public and which one is private. which subnet is used by public which subnet public cant use.
+
+Public means : Internet 
+Private : No connectivity with internet . 
+
+VPC is like Hall , and Internet Gatway in it is like Gate. to go in out . 
+
+so VPC is a network and devide in multiple network is called sub networking (subnet)
+
+so in 3 tire application webpage will be in public sibnet and databse in private subnet.
+
+IP address is uniques (pubic ip )
+
+In world n number of machines are present but IPs are 2*32 hence we cant give to all so we give public IP to 1 server /machine and inside all will be private . Eg : yuotube has only 1 IP bcoz only that is only accessbile to world but inide it yotube has multiple numbers of app (security / finance / search etc its not having public IP ) which doesnt need public access but they are all interconnected so they have private ip address .
+			public iP 		Private ip 
+Tier 2 : web server -> database 
+Tier 3 : Web server -> Application logic -> database 
+
+CIDR 
+
+10.0.0.0/24  000001010.00000000.00000000.|00000000   24 means from left count 24 and draw line it means only first 8 values only you can modify 
+
+192.168.0.3/27 		11000000.10101000.00000000.000|00011 27 mens draw line after 27 from left you can only modify 00011  5 bits only from right 2*5  
+after that saperation left side bid called network bit and right side is host bit 
+
+eg : class A 5 ip 10.0.0.0/					0.0.0.000000|000   10.0.0.0/29				but it can create 8 ip 
+		13 ip 								0.0.0.0000|0000			10.0.0.0/28			but it can create 16 ip 
+		
+CIDR 
+
+10.0.0.0/24			means you can only make 255 ip 
+
+subnet_1  10.0.0.1/28    16 machine you can run in this subnet some are reserved , here we are able to give .1 bcoz at leat 24 left side are fixed
+10.0.0.0000[0000-1111]		28
+
+
+10.0.0.0001[0000-1111]		28				it means   10.0.0.16/28
+
+10.0.0.0011[0000-1111]		28  NOW NO OVER LAP 10.0.0.48/28			
+
+
+subnet_2  10.0.0.48/28		
+
+1 IGW can connect with 1 VPC 
+
+now after creating subnet you need to connect to route table 
+
+route table deside which subnet traffic will go where 
+
+route table public subnet -> traffic will go to internet gateay 
+
+by default all subnet cummunicates each other , how that comm happends it means it autometly coneted with default rt 
+with in vpc commnuncation happends thorught via default route table 
+
+create Route tabe to establish public subnet and internet 
+
+wht internet is 0.0.0.0/0 bcoz on left all can we covered 0.0.0.0-1.1.1.1 all ips which ever present 
+
+
+traffic will flow like subnet -> IGW - > Interent and visa versa 
+
+now you need to associate subnet to RT so public associte to rt 
+
+and then launch Ec2 one with public and another with priver 
+
+-======================
+
+Security Group : its a fire wall on resource level . applies on resource
+
+AWS firewalls : NACL , SG 
+
+NACL applies on entire subnet 
+
+so if in subnet there are 2 instance then on all 2 SG will be there 
+
+apache -> app server is called apache and web server is called httpd
+
+
+========================
+
+IMP : Max In 1 Region we can create 5 VPC and 200 Subnet in 1 VPC. (so 200 subnet means max 200 Rout table)
+	  We can allocate max 5 Elastic IP in 1 acount 
+	  Once we create vpc , DHCP,NACL and Security Group will create automaticly. 
+	  VPC cant be in multile region . it crtest on region not on AZ.
+	  
+	  But if you want to do peering from another vpc in same region then both should have different CIDR 
+	  Subnet creates on Availability zone not on region. 
+	  
+	  VPC is region specific and subnet is AZ . 
+	  1 VPC can extend to other region and 1 subnet cant extend to other AZ . 
+	  
+	  Once VPC created you cant change CIDR of it . (PRIMARY CIDR ) but still you want create one CIDR and make this primary and delete first . 
+	  
+===============================
+
+Subnetting 
+
+Network within a network / logically devision of ip 
+
+Eg: ip 170.20.10.2  its network id is 170.20.0.0 bcoz its class B 
+	   192.168.10.30  its network id is 192.168.10.0  bcoz its class C 
+	   
+Route used for Inter network communication (2 diff network commnuncation)  eg 170.20.0.0 & 15.0.0.0 or 200.10.20.0 & 200.10.21.0
+Switch used for with in network commnuncation.
+
+class A 10.0.0.0 here last 3 means 2^24 IP you can distribute 
+class B 170.30.0.0    here last 2 manes 2 ^ 16 IP you can give    first 2 for network and last 2 for host  2^16 -2 = 65534 IP 
+Class C 192.168.0.0   here 2^8     IP you can give   			2^8 256-2 = 254
+But here also lot of IP waisting hence how to save it ?
+
+if class A has any thing other than 10.0.0.0/8 it means subnetting is happend class B /16 and C /24 .
+
+Part -2 
+
+make diff netwrok from 1 Ip 197.10.10.0/24
+
+Step 1 : 197.10.10.00000000
+Step 2 : Take the max value of computer you want in network , suppose 40 
+			2^n - 2 >= 40 
+			2^6-2 
+			n = 6 
+Step 3 : use this n value 197.10.10.11000000
+							197.10.10.192
+Step 4 : now subnet mask will be 255.255.255.192
+
+part 3 
+-----------------------------------------------------------------------------------
+class A ip 12.0.0.0  
+with this ip you have to create 5 new network 
+
+Step 1 . 12.00000000.00000000.00000000
+			max ip 60   2^n-2>=60
+			2^6-2 
+			n = 6
+step 2 : 12.111111111.111111111.110000000
+		12.255.255.192
+		
+		usual class A subnet mask 255.0.0.0 but now 255.255.255.192
+		
+Network 1 : first subnet ID will be see how many 1 are there so 12.0.0.0/26
+			mask 255.255.255.192
+			
+Network 2 : so its like take first network id to make second subnet add 64 for next 
+			12.0.0.64/26
+			
+Network 3: so its like take first network id to make third subnet   add 64 for next 
+			12.0.0.128/26
+Network 4: so its like take first network id to make third subnet   add 64 for next 
+			12.0.0.192/26
+			
+Network 5 : so its like take first network id to make third subnet   add 64 for next 
+			12.0.1.0/26
+			
+Network 6 : so its like take first network id to make third subnet   add 64 for next 
+			12.0.1.64/26
+
+Network 7 : so its like take first network id to make third subnet   add 64 for next 
+			12.0.1.128/26
+
+Network 8 : so its like take first network id to make third subnet   add 64 for next 
+			12.0.1.192/26
+
+Network 9 : so its like take first network id to make third subnet   add 64 for next 
+			12.0.2.0/26			
+			
+--------------------------------------------------------------------------------			
+New Problem 12.0.0.0
+max ip 1024
+		2^11 
+		n = 11
+		
+step 2 : 12.111111111.111111000.000000000
+		12.255.248.0
+		
+		usual class A subnet mask 255.0.0.0 but now 255.255.248.0
+		
+Network 1 : first subnet ID will be see how many 1 are there so 12.0.0.0/21
+			mask 255.255.248.0
+			
+Network 2 : first subnet ID will be see how many 1 are there so 12.0.8.0/21
+			
+			
+Network 3 : first subnet ID will be see how many 1 are there so 12.0.16.0/21
+
+Network 4 : first subnet ID will be see how many 1 are there so 12.0.24.0/21
+
+Problem 
+200.10.20.10/26  how many computer can we add in this subnet.
+		 .11000000			2^6 - 2 = 62 computers 
+--------------------------------------------------------------------------------
+Problem : 
+Consider the ip 157.110.88.0 we need 30 subnet in such a way each subnet may host upto 64 host 
+
+this will solve through netwok menthod 
+
+157.110.00000000.00000000
+
+2^n >= 30
+n= 5
+
+157.110.11111000.00000000
+
+157.110.248.0		last subnet 
+
+1st subnet : 157.110.0.0/21
+2nd subnet   157.110.8.0/21
+3nd subnet   157.110.16.0/21
+
+no of host per subnet 2^11-2 
+----------------------------------------------------
+Problem
+need 130 subnet in class A ip 10.0.0.0
+
+2^8 >= 130   n=8
+
+10.00000000.00000000.00000000
+
+10.11111111.0.0
+
+10.255.0.0		last subnet 
+
+1st subnet : 10.0.0.0/16
+2nd subnet   10.1.0.0/16
+3nd subnet   10.2.0.0/16
+
+===========================================================
+NAT ALways creates on Public subnet but used for Private . 
+
+VPC 2 type : Default VPC (We can delete it ), CUstom VPC 
+
+To CreaTE vpc :
+
+create vpc 
+create Subnet 
+Create Internet gateway
+Create Route Table 
+
+Public subnet : it knows the route to Internet gateway
+
+Private Subnet : it does not know the route to Internet gateway
+
+For Creating VPC CIDR Range is /16 to /28. The First 4 and last Ip cant be assigned. 
+
+=======================================
+
+Ip 10.0.0.0/16
+
+so it can only have 2^16 = 65536-5 = 65531 Ips 
+
+First IP 10.0.0.0 = Network Address first IP 
+10.0.0.1			VPC router
+10.0.0.2			DNS server
+10.0.0.3			Furure reserverd 
+10.0.0.255  Its Braod cast Address
+
+
+Route Table 
+
+In 1 VPC you can create 200 Route Table and it can have 50 entries in it each . 
+Each Subnet can only associate only with 1 RT. if you dont associate then it will default RT association . 
+you can edit main RT but cant delete. 
+you can associate multiple suubnet to RT . 
+
+
+Internet Gateway 
+
+ITs a virtual Router it connects VPC to internet. 
+Default VPC is already connected to IG but for custom VPC we need to connect .
+It perform NAT Between your private and Public IP . SUpports IPv4 and IPv6.
+
+======================================
+
+NAT Gateways :
+Network Address Translation : Public to Private IP and vis virsa 
+NAT gateway only uses Elastic IP 
+NAT gatway in public subnet. 
+Database is always in Private. 
+Only request will go inside to out , its cant come from out to in bcoz its having private ip .
+After deleting NAT Gateway Elastic IP remain there we need to release it other wise its chrges will go on . 
+
+Security Groups 
+Its inside subnet and it on Instances . 
+It like allow some port or ip .
+Either you can saperately put on instance or one SG on multiple instnace .
+For 1 Ec2 max 5 SG you can create. 
+IMP : Can only Allow but not deny .
+Stateful : if coming then it will go also 
+if inbount 80 mans it will reply on 80 also this is stateful .
+
+NACL : Ntwork Access Ctrl List 
+It implimet on entire subnet
+By default each custom NACL denies all inbound and outbond traffic untill you add rule. 
+Ever subnet should associcate with NACL if not then it will associate with default NACL .
+1 subnet with 1 nacl , but multiple subnet can associate with .
+NACL contain a rule list , and lower number has priority , eg: rule 50 has port 80 allow and rule 60 has port 80 deny then it will allow . 
+max rule number 32766 
+NACL is Stateless , inbound and outbond both place we need to allow. 
+
+SG 												NACL 
+Operate at instance level 					operate at SUbnet level 
+It has allow rule only 						allow and deny both 
+Statefull									stateless
+apply to instance only						on all instacnece in the Subnet . 
+
+VPC Peering 
+Communucatin btw 2 VPC 
+they can communicate via PRIVATE IP with VPC peering. No internet needed. INter region also 
+Transitive peering , VPC A----VPC B----VPC C  but VPC A cant communicate to VPC C .
+
+======================================== 
+4 Practical in VPC 
+
+1. VPC with a Single Public Subnet
+2. VPC with Public and Private Subnets (NAT Gateway)
+3. VPC with Public and Private Subnets and Hardware VPN Access
+4. VPC with a Private Subnet Only and Hardware VPN Access
+
+Lab 1. VPC with a Single Public Subnet
+Lab 2. VPC with Public and Private Subnets (NAT Gateway)
+Lab 3. Create 1 VPC ,IG,Subnet,RT Create second VPC 192.168.0.0 , IG,Subnet,RT and peering connection btw both and create 1-1 instance in both subnet then try to communicate . Ping then each other via private ip . It wont ping until you add that cidr (private ip) in RT. 
+
+Lab 4. VPC COnnectivity in with 2 different region : rest all is above steps . 
+
+Lab 5. NACL Lab : Create 1 VPC ,IG,Subnet,RT , associate subnet to nacl any what ever rule you apply it will work as per. while deleting first dis associate subnet then only nacl will delete. 
+
+Lab 6. End Point Lab : Create 1 VPC ,IG,Subnet,RT , create private subnet. WE want to access serives in private subnet so create end point and attach private subnet to this and also any service like s3. then connect to ssh to public there enter into private and one you are in private do aws configure give sec credentials.  so now try aws coomands and access of s3 , aws s3 ls , create bkt delete bkt here and ck . 
+
+==========================================
+
+3 Kind of Security on VPC 
+Security Group : as a firewall at instance level . Act as  Firewall 
+NACL : Network Access Conteol List : As a firewall for Subnetlevel. Act as  Firewall 
+Flow logs : Capture information about the IP traffic going to and from network interface in VPC . 
+
+==========================
+
+VPC End Point 
+
+NetGateway is very expensive and VPC End Point is more than half less expensive. 
+Its kind of substitue to NAT Gateway . If you want to access AWS servise privately without going to Internet VPC End Point . 
+To access resources Privately without Internet.
+Its will be connected to private subnet. 
+
+ =======================
+VPN : When you want do not want to add your instance directly to internet , but your machine will communicate through secure connection VPN .
+
+crate private and public sub , create vpn kind of instance 
+
+
+========================
+
+
+NAT INSTNACE : Network address translation 
+
+NAT gateway (is better but )is costly NAT INSTNACE is cheap . NAT Gateway you need to charge monlty. it support all feature. 
+
+We can use internet to private subnet. 
+
+NAT instnace is created in public , from in coming traffic cant come. 
+
+NAT not support IPV6. then we need to use Egress only .
+
+Network address Translation .
+
+Aim is same Private Instance has to provide internet.
+
+Lab : 
+
+1 vpc , igw , 2 subnet , 2 rt , then on 1 subnet create instance selecy AMI community and servch nat selecte that instnace . 
+
+======================

@@ -1,0 +1,36 @@
+CloudFront is also called as Content delivery Network (CDN)
+
+CF is web service that give Web app an easy and cost effective way with low cost, latency and high Data tranfer.
+
+This CDN is mainly for to reduce the Laency . it mainly focus on to reduce latency problem . 
+
+Eg: if servr in US then us ppl will get access quickly but from india it will take time to get response. 
+
+one solution is place few auto scaling server to india , UK etc but cost will be high. Challange in ALl DB should also in sync.
+
+Solution comes from Edge location chache momory: Edge location in many cityies, it has cache memory , all edge will in touch of main server. 
+First time request will go to edge location but now its not in cache, but if any other user/request will get quickly .
+Edge location get very fast responce from main server. 
+
+Server ----> Edge ----> user 
+
+Data in Edge location we can give time how much time it will stay dont give high time bcoz if data will update on server but you will get old data from edge location.
+
+Edge location is 203 in world. 
+Regional Edge location is 11 in world so its like main server it keeps every thing. it also cache menory but it keep data for long time.
+================================================
+
+Cloud front is global service . 
+
+Edge location not tied to AZ. 
+
+Edge location will tranfer to reginal edge cache for less populer data. 
+
+All request go to edge location via DNS , DNs (route 53) deside where request will go . 
+
+Proxy method will direclty go to main server. 
+
+=================================================
+
+
+

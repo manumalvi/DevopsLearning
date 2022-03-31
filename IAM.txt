@@ -1,0 +1,124 @@
+AUthenticated : signed-in 
+Authorized : Permission
+
+from aws you can create 5000 acount. in one go 10 can be added . 
+there could be 1000 roles under aws A/c.
+Iam user can be member of 10 group.
+
+IAM Feature : 
+Galnuar permission : 
+different permissions, like just show s3 , or ec2
+IAM is free service
+===============================================
+IAM Terms/components:
+
+Principal : doer , who is doing work , it could be user ,application
+Request : principal will do request to do work 
+Authentication: user name password
+Authorization : what rights he has 
+Action/operations: the work is action 
+Resource : on which action is done eg s3 , ec3 are resources.
+
+By default root user has all resource allowed and IAM user has all denyed.
+
+if reource has policy 
+deny
+deny 
+explicit allow it will get allows bcoz explicit allow has more waightage .
+
+explicit dent has more waitage then explicit deny.
+
+max 10 policy on a resource or user. 
+
+Entity inside a service is resource like ec2 we have instances , s3 we have bucket. in s3 we have glacier, storage . 
+================================================
+
+Identitiy federation like through facebook, google, corporate account with aws. 
+
+SAML : for corporate identity
+
+IAM Role is very similar as IAM user. 
+
+IAM USer could be a person or service or application.
+Group is collection of user. put policy on entire group.
+Group cant be nested , can create max 300 . 
+
+IAM role doesnt not have any username/password.
+
+===============================================
+Permission are granted through policies that are created and attached to group, user or role. and its called identity based policy.
+
+if policiy on resource its called resource based policy. 
+
+On User we can give policy in 3 ways : 
+1. Attach it to a group 
+2. copy permission from existing user 
+3. Attach existing policy direcly. 
+
+INline Policy : its like grp or user policy to customize the policy. 
+
+========================
+Lab 3 : Cross account accesss : 
+
+
+
+ 
+
+
+===============================================
+Teams 
+
+Network Team 
+Application Team 
+Wintel Team (Windows + Intel)
+Unix Team 
+Storage Team 
+DB Team 
+
+====================
+
+So suppose if there are 100 members in all team and network team memeber need to ck s3 logs then we need to add policy to that user and so on . 
+
+Authentication means log in . you have aws account and logged in via user name pwd but not able to create EC2 hence you are not authorize to do so . 
+
+in AWS to work /by any user you need authentication and authorization both .
+Authnetication you can log in but if you dont have authorization you will not be able to create ec2 / s3 etc 
+you are authentication if you can log in 
+Authorization happens through policies . 
+
+its defficult to give policy to different user of diff team . so its better create group eg Network / Application / DB and add policies to it.
+
+====================
+If you wanted to connect from CLI or out side of console then you need to clikc Access key . 
+
+Cloud security develops all these customized policiy development 
+
+We can put user in diffrent groups like higher level mgr 
+
+Tagging is IMP always give _ insted of space 
+
+======================
+
+V IMP : IAM Role 
+
+Role is like Tempraroty access 
+
+Policies outline what can be done (permissions), and these can be attached to roles OR users. · Roles must be assumed by a user or a service.
+
+Role applies on services or user 
+policiy applies on role or user. 
+
+User can switch roles 
+
+IAM User  ---> Permission 
+
+IAM Role ----> Permission + trust policy 
+
+=============================
+
+User Role - if one user access another user account its called as cross account role . 
+
+[AWS landing zone , control tower , organization  is very vast and senior level services aws org service ]
+=============================
+
+

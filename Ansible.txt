@@ -1,0 +1,429 @@
+Configuration Management tool : Ansible
+
+Other Configuration Management tools are Chef / Puppet 
+
+Previously System Admin do all server updates , network ck , S/W updates etc but not its automated by theses tools like Ansible.
+
+Difference btw Ansible and Chef 
+
+Ansible work on Push mechanizm , if any updates will come for S/W it will push to the servers .
+Chef work on Pull mechanizm if any notifcation came like for update it will ask . if work is there then chef will do .
+
+Ansible uses YAML scripting : Yet another markup language , YAML work on Key-pair 
+
+Ansible by Redhat , its version came which is drag and drop without CLI called Ansible Tower (formerly 'AWX') is a web-based solution that makes Ansible even more easy.
+
+Open source Configuration mgmt, deployment and orchestration tool. 
+
+It can be managed by on premise and cloud . It configure IAAC .
+
+Ansible Architecture :
+
+Ansible Server (YAML) ----SSH->----Node1 (Host1 also called)   Node2  Node3(Agent less No agant on nodes)
+
+In Ansible where you write script Called Playbook . 
+
+Advantage : Free, light weight, Agentless, secure ssh . YAML, push mechanism
+
+===========================
+
+Terms of Ansible
+
+Ansible Server : machine where Ansible is installed and from which all tasks and playbook will run.
+
+Module : Module is a commandn or set of command ment to be executed on client side.
+
+Task : Task is a section that consist of a sinlge procedure to be completed.
+
+Role : way of organizing task and files.
+
+Fact :
+
+Invenrty: File contain data about the client server . 
+
+play : Execution of playbook . 
+
+Handler : Task which is called only if a notifier is present. 
+
+Notifier : 
+
+Playbooks:
+
+Hosts : Node or Host are same 
+
+=======================================
+
+Ansible Practical Lab 
+
+AWS , 3 Instance in same AZ 
+
+1. On 1 instance which will be Ansible server , do putty and download ansible 
+2. $ sudo yum install epel-release
+	$ sudo yum install ansible
+3. Now go to host file make ansible server and paste nodes private ips. this host file also called inventry 
+4. vi /etc/ansible/hosts
+   [nodes]
+	172.0.0.0
+	182.0.0.0
+	
+5. Now this file is only working after updating ansibe.cfg 
+6. vim /etc/ansible/ansible.cfg    uncomment invernrty and root
+	sudo -user = root 
+
+now create user/password in all 3 instance all user could be different.
+#adduser ansible
+#passwd ansible 
+
+Switch user 
+#su - ansible 
+
+Give all Privilage to created user also in server and nodes .
+vi visudo
+root  All=All 
+ansible All= All 			add this line 
+
+Now these user can also install any thing like httpd
+
+Now we need to update in ssh file to communincate both way on all machines 
+
+# vi /etc/ssh/sshd-config 
+
+To avoide password in all remote nodes do below
+
+DO ssh key gen on server 
+it will generate public and private key 
+copy public key to oner noded 
+
+this is called Trust relation ship 
+
+it happens root bt root 
+or user btw user only 
+
+once created copy it by 
+
+ssh-copy-id ansible@privateip 
+
+======================
+
+Few Ansible Command 
+
+To ck list of nodes 
+
+[ansible@ip-172-31-4-182 ~]$ ansible all --list-host
+  hosts (2):
+    172.31.7.3
+    172.31.2.149
+ 
+  ansible demo --list-host
+  
+  ansible demo[0] --list-host   first entry  and so on 
+  
+  ansible demo[0:7] --list-host   range
+=====================
+
+COde Can be pushed with 3 methods 
+
+1. Ad Hoc Commands (Nothng but simple Linux Commands) Ad-hoc means Temprary, for small takss like shutdown , start , etc quick functions. One time usage
+2. Modules
+3. PlayBook
+
+Adhoc : Its not having Brain It do No Idopotency it menas if a file already create/exist and you give commnd via adhoc it will again create and overrite
+		that y its not having brain , and this is the disadvantage.
+		
+Module : and PlayBook both are in YAML . Module is a single commnd 
+			More than 1 module (more commands) is called Palybook . 
+
+playbook : More than 1 module (more commands) is called Palybook. 
+
+Module is like a page and playbook is like entire book.
+-----------------------
+
+Ad-hoc : Its in /usr/bin/ansible 
+
+Example of adhoc commands:
+
+[ansible@ip]$ansible demo -a "ls"				-a is argument 
+[ansible@ip]$ansible demo[0] -a "touch file1"
+
+[ansible@ip]$ansible demo -a "sudo yum install httpd -y"     it will install in all 
+[ansible@ip]$ansible demo -ab "yum install httpd -y"		 b = become  become is sudo in linux
+
+Ansible Modules:  and PlayBook has Idempotency
+
+Ansible ships with a number of modules (called module library) that can be execute directly on remote hosts or through playbook.
+Its in package itself of ansible , its not in adinal database 
+
+its location is inverory file only. 
+/etc/ansible/hosts
+
+Example of Module Command
+
+[ansible@ip]$ansible demo -b -m yum -a "pkg=httpd state=present"		in yaml install=present , remove=absent , update=latest -b is sudo -m module 
+
+[ansible@ip]$ansible demo -b -m yum -a "pkg=httpd state=latest"
+
+[ansible@ip]$ansible demo -b -m yum -a "pkg=httpd state=absent"
+
+[ansible@ip]$ansible demo -b -m service -a "name=httpd state=started"
+
+[ansible@ip]$ansible demo -b -m user -a "name=raj"						to add user and if you want to remove state=absent then it will remove
+
+[ansible@ip]$ansible demo -b -m copy -a "src=file1 dest=/tmp"			to copy files 
+
+** If you suppose run httpd prseent command twice so in first it will install and in second it will through that its already installed, its inteligent.
+
+Module Setup 
+
+How this module or palybook knwo that this file is present already or pkg is alredy install, this happens bcoz of setup file in module so it first go to nodes and check wether file/pkg is present or not and give info to server if not present it install . 
+
+setup keep run in background , an thats y idempoteny is possbile.
+
+[ansible@ip]$ansible demo -b -m setup			all info of node it will give 
+
+[ansible@ip]$ansible demo -b -m setup -a "filter=*ipv4*"
+
+==========================
+
+PlayBook :
+
+Playbook is written in YAML, human readable 
+
+Playbook is like a file where we need to write code. Playbook can have one or more modules.
+
+Target section : Define the host against which playbook task has to be executed.
+
+Variable section : define variable 
+
+Task : list of all module which need to be run in an order. 
+
+YAML
+
+For ansible nearly every YAML file start with list.
+Each item in list is having key-value pair called dictionary.
+
+All YAML file start with "---" and end "..." (not mendroty), .yml format file
+Indentation is important in yaml.
+
+key: value
+name: manu			give space after colon
+
+--------------------------------------------------
+[ansible@ip]$ vi targetsection.yml
+
+--- # my first target playbook
+- hosts: demo
+  user: ansible
+  become: yes
+  connection: ssh
+  gather_facts: yes
+
+:wq!
+
+[ansible@ip]$ansible-paybook targetsection.yml
+
+-----------------------------------------------------
+[ansible@ip]$ vi mytask.yml
+
+--- # my first task playbook
+- hosts: demo
+  user: ansible
+  become: yes
+  connection: ssh
+  
+  tasks:
+		- name: install httpd on linux
+	      action: yum name=httpd state=installed
+
+:wq!
+
+[ansible@ip]$ansible-paybook mytask.yml
+
+-----------------------------------------------------
+
+
+[ansible@ip]$ vi myvariable.yml
+
+--- # my first variable playbook
+- hosts: demo
+  user: ansible
+  become: yes
+  connection: ssh
+  
+  vars:
+		pkgname: httpd
+  
+  tasks:
+		- name: install httpd on linux
+	      action: yum name='{{pkgname}}' state=installed
+
+:wq!
+
+[ansible@ip]$ansible-paybook myvariable.yml
+
+----------------------------------------------------
+
+Handler: It same as task but it will run when called by another task.
+		 But only run if a task contain "notify" in it.
+		 
+		 notify has som thing so in handler name also same should come then only it will know what to do and its dependent.
+
+
+[ansible@ip]$ vi myhandlers.yml
+
+--- # my first handler playbook
+- hosts: demo
+  user: ansible
+  become: yes
+  connection: ssh
+  
+  tasks:
+		- name: install httpd on linux
+	      action: yum name=httpd state=installed
+		  notify: restart httpd
+
+   handlers: 
+		- name: restart httpd
+		  action: service name=httpd state=restarted
+
+:wq!
+
+[ansible@ip]$ansible-paybook myhandlers.yml
+
+
+
+Dry run : 
+
+its to check if your playbook is written correctly or not to chekc bfore execution .
+
+ansible-paybook test.yml --check 
+
+-------------------------------------------
+
+Loops:
+
+[ansible@ip]$ vi loops.yml
+
+--- # my first loop playbook
+- hosts: demo
+  user: ansible
+  become: yes
+  connection: ssh
+  
+  tasks:
+		- name: Add a list of user
+	      user: name="{{items}}" state=present
+		  with_items:
+		        - bhupendra
+				- raj
+				- manu
+
+
+:wq!
+
+[ansible@ip]$ansible-paybook loops.yml
+
+---------------------------------------
+
+COnditions: 
+
+When ever we have different scenarios we have conditions. 
+
+[ansible@ip]$ vi COnditions.yml
+
+--- # my first loop playbook
+- hosts: demo
+  user: ansible
+  become: yes
+  connection: ssh
+  
+  tasks:
+		- name: INstall apache in Debian
+	      command: apt-get -y install apache2						command is a module here 
+		  when: ansible_os_family == "Debian"
+		  
+		- name: INstall apache in Redhat
+	      command: yum -y install httpd
+		  when: ansible_os_family == "RedHat"
+
+
+:wq!
+
+[ansible@ip]$ansible-paybook COnditions.yml
+
+----------------------------------------
+
+Vault : Ansible playbook is not secure so value can encrypt it bcoz playbook can have passwords and keys etc . hence valut is used .
+
+Create encrypt playbook (give password  AES256 for encryption Algo)
+
+	ansible-vault create myplaybook.yml
+
+Edit the Encrypted palybook
+
+	ansible-vault edit myplaybook.yml
+
+To Chnage the password 
+
+	ansible-vault rekey myplaybook.yml
+
+To encrypt existing playbook 
+
+	ansible-vault encrypt target.yml
+
+To decrypt existing playbook 
+
+	ansible-vault decrypt target.yml
+	
+----------------------------------------
+
+
+Roles:
+
+Roles are good for organize tasks , we can make saperate files for tasks, handlers etc. 
+
+Below are few roles 
+
+Default : used for store data of application like variable port etc 
+
+Files: it contain file need to be transfer to remote VM 
+
+Handlers : we can sagrigate handler 
+
+Meta : data of data , data detils 
+
+Tasks: all tasks in playbook 
+
+Vars : variables 
+
+Practical 
+
+$ mkdir -p playbook/roles/webserver/tasks
+
+$ tree 				to see herarchy 
+
+if you want hander also 
+$ mkdir -p playbook/roles/webserver/handler
+
+[playbook]$ touch roles/webserver/tasks/main.yml
+
+[playbook]$ touch master.yml 
+
+master and role should have same level. 
+
+Now you can write any thing in main.yml 
+
+and in vi master.yml you have to put target and Roles
+
+--- # my first loop playbook
+- hosts: demo
+  user: ansible
+  become: yes
+  connection: ssh
+  roles: 
+		- webservr
+		
+$ansible-paybook master.yml    so rolls will webserver and webserver will call task main.yml and so on . 
+
+============================================
+
+
