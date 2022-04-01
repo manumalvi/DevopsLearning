@@ -1,16 +1,16 @@
-Container is like a Virtual machine light weight.
-Docker is a tool which create Virtual machine 
+Container is like a light weight Virtual machine.
+Docker is a tool which create Virtual machine.
 
 Docker is advance version of Virtulization. 
-Docker do containerization 
+Docker do containerization.
 
-on Hardware if Hyderperwiser is there its called type-1 barematel . OS is not there on top of HW 
+on Hardware if Hyderperwiser is there its called type-1 barematel . OS is not there on top of HW. 
 
-Problem : 
+VM Problems : 
 1. It has saperate OS which need ram , hard disc, sw licence, cant create many vms  etc 
 2. If ram is allocated to 1 vm , if vm is in not use but ram is still be with that VM . 
 
-container is having hub which is dockerhub .
+container is having hub which is dockerhub.
 
 we can install docker on any OS but dokcer engin run on native linux. its in go language . 
 Docker do OS level virtulization . VM ware do hardware level Virtulization.
@@ -21,13 +21,13 @@ and Ram and all it will share of HW.
 
 From Windows 10 Docker has given support to run on it. you need to enable virtulization and hyper V in windows. IT takes linux files from Docker installed tool only . so no conflict with above 
 
-Contanier has OS files/image is  but very low MB  almost negligible . 
+Contanier has OS files/image is but very low MB almost negligible . 
 
 ===============================================
 
 Docker Advantage :
 1. No pre allocation Ram 
-2. CI Efficiency : Docker Enable you to build container image and we use same image accorss all deployment process.
+2. Docker Enable you to build container image and we use same image accorss all deployment process.
 3. less cost. Light weight
 
 Container 
@@ -36,9 +36,7 @@ Image : when this image is running it called container.
 Image ---Runnning ----> Container 
 Container ---Stop----> Image
 
-DOcker limitation :
-
-
+Docker limitation :
 
 1. Container is made on which OS and if you give that image to test team if they have base os as linux then it wont work as same. cross platform compatibility. 
 2. NOt good for GUI 
@@ -48,15 +46,17 @@ DOcker limitation :
 
 Architecture / Flow
 
-Developer ---Docker File (dependicies,SW)--->Docker Engine Create Image  -----> DockerHub (Registery) ---> any once can pull from hub 
+SW Developer ---Dockerfile (dependicies,SW)--->Docker Engine Create Image  -----> DockerHub (Registery) ---> any once can pull from hub 
 
-Container is layered file system . 
+SW Developer will create Dockerfile , This Dockerfile will run on Docker Engine (Docker daemon) then this engine will create image and keep it by itself and it will create container with that image and all things of Dockerfile will come into container . Image will be updaloaed to docker hub or registry also called for others use. onther user will pull this image and it will contaier create. 
+
+Container is layered file system . container do all things in layered form like ubuntu , browser etc 
 
 Docker Client = where you make file
-Docker Engine/daemon/server  = IT convert Imange into Container 
+Docker Engine/daemon/server  = IT convert image into Container 
 Docker Hub = where all images , docker registry mgr storage
-Docker Compose = 
-Docker Imange : Read only template to create container. single File with all dependency 
+Docker Compose = Docker Compose is a tool for running multi-container applications on Docker defined using the Compose file format.
+Docker image : Read only template to create container. single File with all dependency 
 
 Private registry : its only for compnay 
 
@@ -64,143 +64,188 @@ Docker user can interact with Docker daemon through client (CLI) it use cli and 
 
 Docker Host : Provide an environemnt , phiciscal hardware 
 
-HOw to Create Imange : 
+How to Create image : 
 
-1. Dockurehub you can take 
-2. Create Iamgne frmom docker File
-3. Create iamge from existing docker contaer. 
+1. From Dockerhub you can take 
+2. Create image from dockerfile
+3. Create image from existing docker container. 
 
-COtainer 
 Container hold entire package to run Application . 
-you can not modify imnge you can modify container . 
+you can not modify image you can modify container . 
 ===============================================
-Commands 
+Docker Commands 
 
 yum install docker -y
 
-To See All Images present in your local machine.
-#docker imanges
+service docker status									# To Check Docker Engine is Active or not , service or systemctl any command can be used 
+or 
+systemctl start docker
 
-To find out image in Dockure hub
-#docker search <jennkins/ubuntu>(image name)
-
-To Pull imange from Docker Hub 
-#docker pull centos(image name)
+systemctl enable docker									# To keep running even after restart 
 
 
-run = create + start
-contaer name = bhupendra 
-imagne = ubuntu and it can run on bash 
+[root@ip-172-31-2-211 ec2-user]# which docker			# Where its installed
+/bin/docker
 
-To Check Docker Engin running or not 
-# service docker status
+[root@ip-172-31-2-211 ec2-user]# docker --version		# Docker version
+Docker version 20.10.7, build f0df350
+
+[root@ip-172-31-2-211 ec2-user]# docker info
+
+[root@ip-172-31-2-211 ec2-user]# docker images									# To See All Images present in your local machine.
+REPOSITORY   TAG       IMAGE ID   CREATED   SIZE
+
+[root@ip-172-31-2-211 ec2-user]# docker ps										# To check the running containers 	
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+[root@ip-172-31-2-211 ec2-user]# docker ps -a 									# To check the running and stopped container 
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+[root@ip-172-31-2-211 ec2-user]# docker run -it ubuntu /bin/bash		# To Run a image in interactive mode, it will go inside container
+Unable to find image 'ubuntu:latest' locally							# First searched locally didnt found then went to docker hub to get the image
+latest: Pulling from library/ubuntu										# run = Create + Start of Container 
+4d32b49e2995: Pull complete
+Digest: sha256:bea6d19168bbfd6af8d77c2cc3c572114eb5d113e6f422573c93cb605a0e2ffb
+Status: Downloaded newer image for ubuntu:latest
+root@8506d6fb92a1:/#													# If you do exit it will Stop the exit container
+
+[root@ip-172-31-2-211 ec2-user]# docker ps
+CONTAINER ID   IMAGE     COMMAND   CREATED   STATUS    PORTS     NAMES
+
+[root@ip-172-31-2-211 ec2-user]# docker ps -a
+CONTAINER ID   IMAGE     COMMAND       CREATED         STATUS                       PORTS     NAMES
+8506d6fb92a1   ubuntu    "/bin/bash"   3 minutes ago   Exited (130) 7 seconds ago             funny_bhaskara
+
+[root@ip-172-31-2-211 ec2-user]# docker images						    # Once Image is downloaded it will present locally .
+REPOSITORY   TAG       IMAGE ID       CREATED       SIZE
+ubuntu       latest    ff0fea8310f3   13 days ago   72.8MB
+
+Again you can start/run container but this time it wont take image from Docker hub . and from locally Present image container will create . 
+Multiple Containers Can be created from Single Image.
+
+[root@ip-172-31-2-211 ec2-user]# docker pull jenkins/jenkins			# To Just get the image from Docker Hub pull command is used. 
+Using default tag: latest
+latest: Pulling from jenkins/jenkins
+5492f66d2700: Pull complete
+27d985a24813: Pull complete
+
+[root@ip-172-31-2-211 ec2-user]# docker images
+REPOSITORY        TAG       IMAGE ID       CREATED        SIZE
+jenkins/jenkins   latest    9c941210afa1   43 hours ago   460MB
+ubuntu            latest    ff0fea8310f3   13 days ago    72.8MB
+centos            latest    5d0da3dc9764   6 months ago   231MB
+
+#docker search <jennkins/ubuntu>(image name)							# To find out image in Docker hub with out going to browser 
+
+[root@ip-172-31-2-211 ec2-user]# docker run -it --name myJenkins jenkins/jenkins /bin/bash    # Give a name to container
+
+[root@ip-172-31-2-211 ec2-user]# docker start myJenkins                 # you can Start/Stop Container by name or ContainerID   
+
+[root@ip-172-31-2-211 ec2-user]# docker attach 39d0dbc4aae8				# going insdie a running container via id or name 
+
+[root@ip-172-31-2-211 ec2-user]# docker rm determined_elbakyan			# you can Remove Container by name or ContainerID
+																		# running/Paused Container cant be removed/deleted 
+
+[root@ip-172-31-2-211 ec2-user]# docker image inspect ubuntu			# To ck inside image 
+
+[root@ip-172-31-14-79 ec2-user]# docker exec -it ubuntu /bin/bash		# it need Container id  exec and attach do same but execute create new pid 
+Error: No such container: ubuntu
+[root@ip-172-31-14-79 ec2-user]# docker run -it ubuntu /bin/bash		# it needs image to run 
+root@172d725c1705:/#
+
 =================================================
 Container Commands 
 
-To Create container and Giving name to Container
+To Create container from image and Giving name to Container
 # docker run -it --name bhupendra ubuntu /bin/bash
 or 
 # docker run -it ubuntu /bin/bash
+or 
 
-To Start Container
-#docker start <Container name>
+[root@ip-172-31-6-73 ec2-user]# docker create fedora					# This will also create image
 
-To go inside contaner
-# docker attach <Container name>
+[root@ip-172-31-6-73 ec2-user]# docker run -td fedora					# This will run container with out interactive mode
 
-To See all Container
-# docker ps -a  (it will give all contnaert stoed also if only runing docker ps)
+# docker start <Container name>											# Once Container is Created by Container ID you can start it.
 
-To Stop Container
-# docker stop <Container name>
+# docker attach <Container name>										# Go inside running Container 
 
-To delete Container
-# docker rm <Container name>
+# docker stop <Container name>											# To Stop Container
 
-Docker version 19.0
+# docker rm <Container name>											# To delete Container
 
-start docker and do docker info 
+# docker container/image prune 												# It will remove all stopped container
 
-go inside contaner and check os  /etc/os-relases
+# docker rm -f $(docker ps -aq)											# Stop all running Containers, Remove all Containers
 
-exit will stop contaner 
+Container States : 
+
+created 	A container that has been created (e.g. with docker create) but not started
+restarting  A container that is in the process of being restarted
+running 	A currently running container
+paused 		A container whose processes have been paused
+exited 		A container that ran and completed ("stopped" in other contexts, although a created container is technically also "stopped")
+dead 		A container that the daemon tried and failed to stop (usually due to a busy device or resource used by the container) - Added on v1.22
 
 ============================================
 3 ways to Create images : 
 
-1. From Docker hub imagne will come
-2. From imange new imanges can be made
-3. crea imange from docker file. 
+1. From Docker hub image will come
+2. From image change some thing (install packages)new images can be made
+3. Create image from dockerfile. 
 
-create one container File 
+Method 2 : From image change some thing (install packages)new images can be made
 
-# docker run -it manu ubuntu /bin/bash
-
+# docker run -it --name newcontainer ubuntu /bin/bash			# First Create a Container from an image.
 # cd /tmp
-
 # touch myfile
 
-After creation what changes happend 
+# docker diff <container name>									# To Check the Difference in Container   C Change, A Append/Add, D Delete
+ 
+# docker commit newcontainer imgname							# To Create image from edited container
 
-# docker diff <Contaner name>
+																# So we can share this image to other or push in Dockerhub for Others. 
+-----------------------------------------------------------------
 
-To Create imang of COntaner 
-# docker commit newcontaner  imangename
+** Method 3 IMP : Create images by Dockerfile
 
-============================================
-IMP : Create images  by Docker Files 
+Dockerfile is a text file, set of instruction, Dockerfile  D will be capital 
 
-Dockerfile is a text file , set of instruction 
+FROM : 	Its for base image , top of the file in capital , like ubuntu
 
-FROM : Its for base image , top of the file in capital , like ubuntu
-
-RUN : To execute a command it will create layer in imange.
+RUN : 	To execute a command it will create layer in image.
 
 MAINTAINER : Author / owner 
 
-COPY: Copy file from local machine you cant download from net 
+COPY: 	Copy file from local machine,  you cant download from net. 
 
-ADD : download from internet , and extract also compresed files. 
+ADD : 	download from internet , zip folder downlaod from internet and extract also them . 
 
 EXPOSE : it open port number eg 8080 
 
 WORKDIR : set your work dir like /tmp , / usr etc 
 
-CMD : It execute during contaer creation 
+CMD : 	It execute during container creation 
 
 ENTRYPOINT : similer to CMD but having highr priority 
 
 ENV : Environmant varaible
 
-ARG : Argument 
-
+ARG : Argument  
 
 
 Steps : 
 
-1.Create file named Dockerfile
-2.Add instruction to Dockerfile
-3.Build imange by this file				
-4.run image to container
-
-
-Create image by Dockerfile 
-
-vi Dockerfile
+vi Dockerfile												# Create file named Dockerfile and Add instruction to Dockerfile
+	
 FROM ubuntu
 RUN echo "Hello" > /tmp/myfl
 
-
-docker build -t myimg .
-
-docker ps -a 
-
-docker imanges 
+docker build -t myimg .										# Build image by this Dockerfile, -t is tag for image, check docker images 
 
 docker run -it --name mycnter myimg /bin/bash
 
-
-Practical : 
+Practical 1: 
 
 [ec2-user@ip-172-31-11-221 ~]$ vi Dockerfile
 [ec2-user@ip-172-31-11-221 ~]$ cat Dockerfile
@@ -230,34 +275,102 @@ bin   dev  home  lib32  libx32  mnt  proc  run   srv  tmp  var
 boot  etc  lib   lib64  media   opt  root  sbin  sys  usr
 root@dfe934d16d01:/# cat /tmp/myfl
 
+Practical 2: 
+
+[root@ip-172-31-2-211 ec2-user]# vim Dockerfile
+
+FROM ubuntu
+
+RUN echo "Hello How are you" > /tmp/newfile
+
+WORKDIR /tmp										# you will be at this place in Container
+
+ENV myenv manuenv
+
+COPY testfile1 /tmp
+
+ADD test.tar.gz /tmp
+
+
+[root@ip-172-31-2-211 ec2-user]# touch testfile1
+[root@ip-172-31-2-211 ec2-user]# touch test
+[root@ip-172-31-2-211 ec2-user]# ls
+Dockerfile  test  testfile1
+[root@ip-172-31-2-211 ec2-user]# tar -cvf test.tar test
+test
+[root@ip-172-31-2-211 ec2-user]# ls
+Dockerfile  test  testfile1  test.tar
+[root@ip-172-31-2-211 ec2-user]# gz
+gzexe  gzip
+[root@ip-172-31-2-211 ec2-user]# gzip test.tar
+[root@ip-172-31-2-211 ec2-user]# ls
+Dockerfile  test  testfile1  test.tar.gz
+
+[root@ip-172-31-2-211 ec2-user]# ls
+Dockerfile  testfile1  test.tar.gz
+[root@ip-172-31-2-211 ec2-user]# docker build -t secongimg .
+Sending build context to Docker daemon  9.216kB
+Step 1/5 : FROM ubuntu
+ ---> ff0fea8310f3
+Step 2/5 : RUN echo "Hello How are you" > /tmp/newfile
+ ---> Running in 699efa383f45
+Removing intermediate container 699efa383f45
+ ---> d01e05c8b805
+Step 3/5 : ENV myenv manuenv
+ ---> Running in cbe7f51048d6
+Removing intermediate container cbe7f51048d6
+ ---> 4dfb2845747b
+Step 4/5 : COPY testfile1 /tmp
+ ---> 0e6b8493a62a
+Step 5/5 : ADD test.tar.gz /tmp
+ ---> 189812a71dba
+Successfully built 189812a71dba
+Successfully tagged secongimg:latest
+[root@ip-172-31-2-211 ec2-user]# ls
+Dockerfile  testfile1  test.tar.gz
+
+[root@ip-172-31-2-211 ec2-user]# docker images
+REPOSITORY        TAG       IMAGE ID       CREATED          SIZE
+secongimg         latest    189812a71dba   14 seconds ago   72.8MB
+myimage           latest    b72635a57318   7 minutes ago    72.8MB
+<none>            <none>    a096d4fdf43d   38 minutes ago   72.8MB
+jenkins/jenkins   latest    9c941210afa1   45 hours ago     460MB
+ubuntu            latest    ff0fea8310f3   13 days ago      72.8MB
+centos            latest    5d0da3dc9764   6 months ago     231MB
+
+[root@ip-172-31-2-211 ec2-user]# docker run -it secongimg /bin/bash
+root@d2c90be609d2:/# ls
+bin  boot  dev  etc  home  lib  lib32  lib64  libx32  media  mnt  opt  proc  root  run  sbin  srv  sys  tmp  usr  var
+root@d2c90be609d2:/# cd /tmp/
+root@d2c90be609d2:/tmp# ls
+newfile  test  testfile1
+root@d2c90be609d2:/tmp# cat newfile
+Hello How are you
+root@d2c90be609d2:/tmp# cat test
+
 ==============================
 
 Docker Volume 
 
-In Container we can create volumen (like a Folder/dir) and this shared folder can be shared with different Contaers . 
+In Container we can create volumen (like a Folder/dir) and this shared folder can be shared with different containers . 
 Volume is declared in Dockerfile 
 Its a shred storage if any one update any thing for all it will show.
 
-Its a Direcrty inside one container 
-Even if one contaer its shared and contaier sttoped volume can be accssed from other containers. 
+Even if one container its shared and contaier stopped volume can be accssed from other containers. 
 Volume can only be created while creating container. 
 Existing contaier cant create volume is created. 
-Deleting contaer volume wont delete.
-Only 1 volume is  there hence no need to specify volume name in command .
+Deleting container volume wont delete.
+Only 1 volume is there hence no need to specify volume name in command .
 
 Create Volume : Container - Container  
 
 1. vi Dockerfile
 FROM ubuntu
-VOLUME ["/myvolume"]
+VOLUME ["/myvolume"]  or VOLUME /tmp
+														
+docker build -t myimg .								# Then Create image from this Docker file
 
-2. Then Create iamge from this Docker file
-docker build -t myimg .
-
-3. Create Container from this iamgne and run
-docker run -it --name container1 mying /bin/bash
-
-4. Now do ls to see volume
+docker run -it --name container1 mying /bin/bash	# Create Container from this image and run, ls to see vcreated Volume
 
 Now share volume with another Container2
 
@@ -269,6 +382,48 @@ ck sample dile in container1
 4. docker start container1
 5. docker attach container1
 
+Practical :
+
+[root@ip-172-31-2-211 ec2-user]# docker run -it  --name myvolcontainer volumimg /bin/bash
+root@d2e939ce9216:/# ls
+bin   dev  home  lib32  libx32  mnt       opt   root  sbin  sys  usr
+boot  etc  lib   lib64  media   myvolume  proc  run   srv   tmp  var
+root@d2e939ce9216:/# cd myvolume/
+root@d2e939ce9216:/myvolume# ls
+root@d2e939ce9216:/myvolume# touch 1 2 3 4 5
+root@d2e939ce9216:/myvolume# ls
+1  2  3  4  5
+root@d2e939ce9216:/myvolume# exit
+
+[root@ip-172-31-2-211 ec2-user]# docker run -it --name myvolumecont2 --privileged=true --volumes-from myvolcontainer ubuntu /bin/bash
+root@f2375ef882c7:/# ls
+bin   dev  home  lib32  libx32  mnt       opt   root  sbin  sys  usr
+boot  etc  lib   lib64  media   myvolume  proc  run   srv   tmp  var
+root@f2375ef882c7:/# cd myvolume/
+root@f2375ef882c7:/myvolume# ls
+1  2  3  4  5
+root@f2375ef882c7:/myvolume# touch 6 7
+root@f2375ef882c7:/myvolume# ls
+1  2  3  4  5  6  7
+root@f2375ef882c7:/myvolume# exit
+
+[root@ip-172-31-2-211 ec2-user]# docker ps -a
+CONTAINER ID   IMAGE             COMMAND                  CREATED              STATUS                           PORTS     NAMES
+f2375ef882c7   ubuntu            "/bin/bash"              About a minute ago   Exited (0) 13 seconds ago                  myvolumecont2
+d2e939ce9216   volumimg          "/bin/bash"              34 minutes ago       Exited (0) 33 minutes ago                  myvolcontainer
+ce7f80d41e9e   volumimg          "--name myvolcontainer…"   35 minutes ago       Created                                    flamboyant_johnson
+
+[root@ip-172-31-2-211 ec2-user]# docker start myvolcontainer
+myvolcontainer
+[root@ip-172-31-2-211 ec2-user]# docker attach myvolcontainer
+root@d2e939ce9216:/# ls
+bin   dev  home  lib32  libx32  mnt       opt   root  sbin  sys  usr
+boot  etc  lib   lib64  media   myvolume  proc  run   srv   tmp  var
+root@d2e939ce9216:/# cd myvolume/
+root@d2e939ce9216:/myvolume# ls
+1  2  3  4  5  6  7
+root@d2e939ce9216:/myvolume#
+
 
 Method 2 : Try to Create Volume by using Commands
 
@@ -278,7 +433,7 @@ Method 2 : Try to Create Volume by using Commands
 
 now you go inside container4 and ck volume in it. 
 
-=============================
+---------------------------------------------------------------
 
 Volume : Sharing Between HOst (local machine) - Container 
 
@@ -286,9 +441,9 @@ Volume : Sharing Between HOst (local machine) - Container
 
 2. docker run -it --name hostcontiner -v /home/ec2-user:/manu --privileged=true ubuntu /bin/bash
 
-it will create manu as a volume in contaner and map //home/ec2-user to btw both host and container.
+it will create manu as a volume in container and map //home/ec2-user to btw both host and container.
 
-Other Commands 
+Volume Commands 
 
 docker volume ls 
 
@@ -302,18 +457,17 @@ docker volume inspect <volume name>
 
 docker contaier inspect <container name>
 
-
 ======================================
 
 Docker Port Expose : 
 
-How to reach container from internet ? 
+Problem : 
+How to reach container from internet ? if we have webpage on container how to access it ? 
+Container doesn't has its own IP address. 
+Generally you can change port at host but take default port at container (Dont change)
+ports 0-65535 are logical port 
 
-ports 0-65535 logical port 
-
-Map is we have maped contaner port with host machine . 
-
-if we have webpage on contaner how to access it . 
+Map is we have maped container port with host machine . 
 
 Steps : 
 
@@ -325,41 +479,38 @@ Steps :
 
 now create container 
 
-6. docker run -td --name techserver -p 80:80 ubuntu     it wont take to inside contaner 80:80 hostport : containerport , d is daemon
+6. docker run -td --name techserver -p 80:80 ubuntu     # It wont take to inside container 80:80 hostport:containerport, d is daemon
+														# expose option is for only iter container communication inside dck. -p any where on internet.
 7. docker ps
-8. docker port techserver								it wil show you detail which port is map to host ports 
-9. docker exec -it techserver /bin/bash					this is also one way to go inside contaner along with attach , this start new process .
+8. docker port techserver								# It wil show you detail which port is map to host ports 
+9. docker exec -it techserver /bin/bash					# This is also one way to go inside container along with attach, this start new process .
 10. apt-get update -y
 11. apt-get install apache2
 cd /var/www/html create here index.html
-12. service apache2 start 
+12. service apache2 start 								# you can access it by public ip eg: 1.1.1.1:80 
 
 ---------------------
 
-second exaample now webpage but jenkins 
+second example not webpage but jenkins 
 
 docker run -td --name myjenkins -p 8080:8080 jenkins
 
 ---------------------
 
-Dokcer exec vs attahc 
-
-exec : create new process it create new pid
-
 expose vs publish 
 
-publih is more powerfull , even if you dont expos now it can be assible 
+publish is more powerfull , even if you dont expos now it can be assible 
 
-1. if you specify nither expose nor -p so the service will be access only from inside the contaner. 
+1. if you specify nither expose nor -p so the service will be access only from inside the container. 
 2. If you do only Expose : service cant be assible outside docker but other docker container can access it but no one from internet this is good for inter container communication 
 3. if both expose and -p : its accessbile from anywhere 
 4. if you do -p but not expose : it will open for all , -p overrite expose in docker and anywhere 
 
 ==========================
-Docker Hub
+Share Image with Others : Docker Hub
 
-How to share contaner imange to other on docker hub . 
-How to make imange private bcoz its all public.
+How to share container image to other on docker hub . 
+How to make image private bcoz its all public.
 
 1. Go to putty , go to instnace ec2-user
 2. sudo su 
@@ -367,9 +518,8 @@ How to make imange private bcoz its all public.
 4. yum install docker
 5. service docker start 
 6. docker run -it ubuntu /bin/bash
-7. create some file in contaner 
-8. create iamnge from contaert 
-dockr commit contaername imangename
+7. create some file in container 
+8. create Image from containert 				# docker commit containername imagename
 
 Now create account in docker hub 
 
@@ -378,17 +528,23 @@ Now come to host machine
 docker login 
 username/password dockerhub
 
-docker tag imangename dockerid/imgnamefor_otheres
+docker tag imagename dockerid/imgnamefor_otheres			# First create tag of the image manumalvi/myfirstimgpush
 
-docker push dockerid/imgnamefor_otheres
+docker push dockerid/imgnamefor_otheres						# To push the Docker image into DockerHub manumalvi/myfirstpush
 
-Take this imange from other region tokyo from instance install docker and start 
+Take this image from other region tokyo from instance install docker and start 
 
-dokcer pull dockerid/imgnamefor_otheres
+dokcer pull manumalvi/myfirstimgpush						# To pull the created image from DockerHub manumalvi/myfirstpush
 
-docker run -it --name img dockerid/imgnamefor_otheres /bin/bash
+docker run -it --name img dockerid/imgnamefor_otheres /bin/bash  # This image will run now. 
 
-credentials will be needed 
+
+Make The Image Private then Pull will not happen : Now do login first and pull 
+
+docker login 
+username/password dockerhub
+
+dokcer pull manumalvi/myfirstimgpush
 
 ==================================
 Some Commands 
@@ -400,25 +556,11 @@ docker stop $(docker ps -a -q)   it will run in loop and quit
 Delete all 
 docker rm $(docker ps -a -q)
 
-Delete all imange 
-
-docker rmi -f $(docker imanges -q)
+Delete all image 
+docker rmi -f $(docker images -q)
 
 ===============================
 
-Questions : 
-
-COntainer States : 
-
-No, there are other possible states. The Docker Remote API defines the following states:
-
-created A container that has been created (e.g. with docker create) but not started
-restarting A container that is in the process of being restarted
-running A currently running container
-paused A container whose processes have been paused
-exited A container that ran and completed ("stopped" in other contexts, although a created container is technically also "stopped")
-dead A container that the daemon tried and failed to stop (usually due to a busy device or resource used by the container) - Added on v1.22
- 
 
 
 
