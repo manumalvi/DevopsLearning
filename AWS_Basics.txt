@@ -28,7 +28,7 @@ PAAS : Follow Horizontal scalling
 
 Auto scalling give you horizontal 
 
-Vertical scallig we remove small instacne and add bigger instance 
+Vertical scallig we remove small instance and add bigger instance 
 =====================================
 Benifits of cloud : Cost saving, 24*7 Availability, scalability, Automated update of software, Desaster recovery, security, reduce carbon footprint etc.
 

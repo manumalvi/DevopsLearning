@@ -1,4 +1,4 @@
-AUthenticated : signed-in 
+Authenticated : signed-in 
 Authorized : Permission
 
 from aws you can create 5000 acount. in one go 10 can be added . 

@@ -1,4 +1,4 @@
-Maven is a Project Management tool . java project . This is key feature of maven.
+Maven is a Project Management tool . java project (java / apium/ restassuredAPI all are in jave only so all use maven to build) . This is key feature of maven.
 
 Maven is a Build Tool . 
 Maven manages Dependencies. 
@@ -50,5 +50,76 @@ Maven Build Life Cycle :
 4. package (Build)
 5. Instll
 6. deploy 
+
+
+Why Maven ? 
+
+1. Central Reposiroires to get dependencies. 
+2. Maintaining Common structure accross the organization 
+3. Flexibility in intigrating with CI tools.
+4. Plugin for test framework executions.
+
+
+
+2. Maintaining Common structure accross the organization 
+my-app
+|-- pom.xml
+`-- src
+    |-- main
+    |   `-- java
+    |       `-- com
+    |           `-- mycompany
+    |               `-- app
+    |                   `-- App.java
+    `-- test
+        `-- java
+            `-- com
+                `-- mycompany
+                    `-- app
+                        `-- AppTest.java
+						
+
+Maven Terminoloy: 
+
+Group id  : Based on this Group id it will identify your project . so below in Exapple its selenium proejct or if groud id is rest assure its for api  
+
+<!-- https://mvnrepository.com/artifact/org.seleniumhq.selenium/selenium-java -->
+<dependency>
+    <groupId>org.seleniumhq.selenium</groupId>
+    <artifactId>selenium-java</artifactId>
+    <version>4.1.3</version>
+</dependency>
+	
+Artifact Projct : sub proejct if , its nothing but jar name of selenium. so it looking for seleium java . 
+
+version : it mans it wants selenium java version 4.1.3 	
+
+Even if you publish your project in mvn repo if some one needs your project and you will provide groupid/artifct id so they can clone and get your code.
+
+archtype:generate   = generate a new project from an archtype.
+
+Creating a Project
+
+mvn archetype:generate -DgroupId=com.mycompany.app -DartifactId=my-app -DarchetypeArtifactId=maven-archetype-quickstart -DarchetypeVersion=1.4 -DinteractiveMode=false 
+
+With artifactId name your project will be created. 
+
+So when we give these dependency the above 4 line maven download the java dependencis and bring to project and where are those java file are placed .
+So when we install maven .M2 folder created and in this only all java file of dependencies placed. 
+
+so like eclips look for dependent jar and you need to set path for .M2 so it can reach to dependencies. 
+
+
+once with command herachy will created so below are terms. 
+
+package name is nothing but Groupid 
+Artifact id is nothing but project name. 
+
+POM.xml 
+
+pom.xml has the information of the groupid and artifact id of the project. and the version number. 
+
+you need to copy thoese dependency and paste in pom.xml file inside dependencies. so here is all your jar dependencies. 
+pom.xml file is always at project level .
 
 

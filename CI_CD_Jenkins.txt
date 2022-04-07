@@ -1,10 +1,10 @@
-Continious Intigration / Continious Delivery   or Deployment (depends on sitiuation)
+Continious Intigration / Continious Delivery  or Deployment (depends on sitiuation)
 
-CI/CD is a methology doing things in better way . Its automated . 
+CI/CD is a methology doing things in better way. Its automated . 
 
 Continious Intigration = Continious Building + Continious Testing 
 
-pipeline = Virsion ctrl -> Build -> unit test-> deployment -> Testing (Functional,Reg)->Prod deployment -> Mesuar and Validate(QA)
+pipeline = Virsion ctrl -> Build -> unit test-> deployment -> Testing (Functional,Reg)->Prod deployment -> Measure and Validate(QA)
 
 at each level we are getting feedback in each step so its very fast. 
 
@@ -14,7 +14,9 @@ Test-> selenim,junit
 Deployment-> chef ansible 
 Monitor->nagios
 
-so in between all there is intigration tool called jenkins , its ci tool., Its having community suppprot and lots of plugins. Bcoz of CI bug will be fast.
+so in between all there is intigration tool called jenkins , its ci tool.
+ITs popularity reason : Its having community suppprot and lots of plugins. 
+Bcoz of CI bug will be reported fast.
 
 CD : Continius Deployment (if cust do not know how to deploy SW then some team will go and help and train them)
 Continious delivery : Sw will be delivery to Customenr .
@@ -23,13 +25,18 @@ Plugins : are like small libraries that add new ability to jenkins and provide i
 
 Artifact: its code after build not the raw code. ready to use . for Archiving 
 
-Jenkins has master slave architecture . It can do cron scheduling . 
+Jenkins has master slave architecture . 
+
+Jenkines can do cron scheduling . 
+
+In jeniks we can do labeling , means we can ask specific task for specific Slave to do . and assign it to that slave. 
 
 Build : Complie , Code reivew , test , packaging .jar etc 
 
 ================================================================
-Jenkines : 
+Jenkines : Installation  
 
+if you forget password : in config.xml inside jenkins set usersecurity to false 
 
 local Install Git , java , maven (mvn -version) , jenkins 
 
@@ -37,17 +44,42 @@ to restart / stop jenkins 			admin admin123
 
 http://localhost:8080/restart  or http://localhost:8080/stop
 
+If you build any thing on jenkins it will create a directory called workspace inside C drive jenkins .
+
+C:\ProgramData\Jenkins\.jenkins\workspace\myfirstp
+
+you can create free style job and in add build step select windows shell and write echo "hello" and save build this job. 
+
+You want to copy existing project : Dashboard-> New item -> Copy from (write name of proejct you want to copy) click ok save -> bulild 
+
+so all these work you are doing happending in C dive inside workspace folder. 
+
+install greeball plguin 
+===================================================
+
+Dash Board -> Manage Jenkins -> Global tool configuration  , here you can add path .exe or jdk path like maven git , jdk , ant , gradel etc 
+
+Manually Building : Maven Project 
+
 git clone https://github.com/manumalvi/time-tracker.git
 go to time-tracker once cloned in c drive 
 mvn clean package  		it will build so this is manual process 
 
-Now try to do same from jenkins select maven and give git path and give clean package (maven do no write bcoz we have selected maven project )
 
-Schedule Project : Click on any project -> configure -> Build trigger -> build periodicly (fix interval of time it will build automaticly)
+Now try to do same from jenkins 
+New item -> select maven project -> Source code management (select git )-> Root POM (default pom.xml)-> goals and options clean Package 
+(maven mvn do no write bcoz we have selected maven project )  Come to dashboard and build it. 
+=========================================================
+
+Schedule Project : 
+
+you can scheduel a build after a perticular time 
+
+Click on any project -> configure -> Build Triggers -> Build periodicly (fix interval of time it will build automaticly)
 
 ***** (Minute , hour , days , month , week)  carefull last is week 
 
-Better Option : Source code polling 
+Better Option : Source code polling (POLL SCM in Build Triggers )
 
 When ever you change in code it will trigger 
 jenkines home->mymavenproject->configure->go to build trigger 
@@ -65,28 +97,89 @@ Get-Command git.exe | Select Definition     in wondows  on poershell
 
 Linked Project 
 
-Link your project/Item  to One Job is lined to another job .
+Link your project/Item to One Job is lined to another job .
 
 UpStream : Job A will Linekned to Job B , But here JOb A will finish work and Tell to Job B to start its job .
-			in Configure you need to give post Build Action , and mention Job B . so it will start Job B . 
+		   in Configure you need to give post Build Action , and mention Job B . so it will start Job B . 
 
 DownSream : This is opposite of UpStream . Mention in Job B once Job A work done you need to start . 
 			in Configure you need to give Build after other projects are build . 
 			
-			
-User Management Role based : what ever role you will give to user he wll be able to perform that only suppose you give dev or test .
 
+Pracitcal : 
+
+Up Stream 
+create a free style project Job A -> Go to Configure of Job A -> Select Build other project in post build Action -> and now Build Job A second job will be in queue . 
+			
+
+Down Stream 
+
+create a free style project Job A -> Go to other Job  -> go to Configure of it and select Build Trigger  -> build after other project are Build and give first job name . 
+
+====================================== 
+
+User Management Role based : what ever role you will give to user he wll be able to perform that only suppose you give dev or test .
+User can do the specific work only . 
+
+
+By deafult new created user will have all privilages as admin . 
+
+any plugin/ user created by as admin. 
+
+
+Mange Jenkins ->  manage users -> create user , this user will also see all jobs and can do all 
+
+now we want user to do ony specific things (give permissions to what to do )- > login as admin and install plugin Role bases Authorization stratergy
+
+now go to admin and create manage and assign role 
+
+=======================================
 Master slave : 
 
-Master menas if any job done it create a file in c jenkins folder 
+By deafult marster does all work . 
+Master means if any job done it create a file in c jenkins folder 
 
 if we create slave1 and slave 2 so we need to create 2 foloder also in c drive . 
 
-slave1 and slarve1dir is not linked to each other , so you need to have agent.jar file. 
+Every master and slave has one directory , so what every job they are doing they keep in it. 
 
-job1 if we trigger any one can do master or slaves , so for that you need to put label we need to give to job1 and slave1 so now its linked so slave will do that work . 
+slave1 and slarve1dir is not linked to each other , so you need to have agent.jar file. agaent.jar file work is to create link btw slave and slave directory. 
 
-Manage jenkins --> manage node --> new node create slave 
+job1 if we buid any one can start the work it could be master or slaves , so for that you need to put label.
+
+Label is to define who will do what work . Eg  if we want job1 should be done by slave 1 we need to give label . 
+
+So in jab 1 we will set label as Redlabel and in slave 1 also we will set Label as Redlabel . so both area matching . 
+
+Practical  
+
+Manage jenkins --> manage node --> new node -> give name slave1 -> mark permanet agent  -> Remote Root Dir -> c:\slave1 
+
+in launch method select launch agent via executuon of cmd on controler from here download agaent.jar copy from down load and paste in c drive 
+and in launch command write this java -jar C:\agent.jar   and save it. 
+
+and refresh the browser so now any job if you will build will be taken by any one.
+
+Label : 
+
+Now go to that slave1 and set label as myPreference and save and now go to job check "restrict where this project can be run" and in label give myPreference.
+ once you will build now slave1 will take this job. 
+
+=========================================
+
+Real Project: 
+
+Install git . 
+Install Java and Configure it env variable user and syatem JAVA_HOME=jdk file path , in syatem variable give path jdk path of bin 
+chek java -verion , echo %JAVA_HOME%
+
+you can run jenkins from tomcat server . 
+
+deploy to contaner is a plugin to deploy . 
+
+install buuld pipeline plugin 
+
+
 
 
 

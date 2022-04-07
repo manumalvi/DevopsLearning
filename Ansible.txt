@@ -2,36 +2,38 @@ Configuration Management tool : Ansible
 
 Other Configuration Management tools are Chef / Puppet 
 
-Previously System Admin do all server updates , network ck , S/W updates etc but not its automated by theses tools like Ansible.
+Previously System Admin do all server updates, network ck, S/W updates etc but Now its automated by theses tools like Ansible.
 
 Difference btw Ansible and Chef 
 
-Ansible work on Push mechanizm , if any updates will come for S/W it will push to the servers .
+Ansible work on Push mechanizm , if any updates will come for S/W it will push to the Nodes .
 Chef work on Pull mechanizm if any notifcation came like for update it will ask . if work is there then chef will do .
 
-Ansible uses YAML scripting : Yet another markup language , YAML work on Key-pair 
+Ansible uses YAML scripting : Yet another markup language, YAML work on Key-pair 
 
-Ansible by Redhat , its version came which is drag and drop without CLI called Ansible Tower (formerly 'AWX') is a web-based solution that makes Ansible even more easy.
+Ansible by Redhat, its version came which is drag and drop without CLI called Ansible Tower (formerly 'AWX') is a web-based solution that makes Ansible even more easy.
 
-Open source Configuration mgmt, deployment and orchestration tool. 
+Open source Configuration mgmt, deployment and orchestration tool.
 
-It can be managed by on premise and cloud . It configure IAAC .
+It can be managed by on premise and cloud. It configure IAAC .
 
 Ansible Architecture :
 
-Ansible Server (YAML) ----SSH->----Node1 (Host1 also called)   Node2  Node3(Agent less No agant on nodes)
+Ansible Server (YAML) ----SSH->----Node1 (Host1 also called) Node2  Node3(Agent less No agant on nodes)
 
-In Ansible where you write script Called Playbook . 
+In Ansible where you write script Called Playbook. 
 
-Advantage : Free, light weight, Agentless, secure ssh . YAML, push mechanism
+Ansible is Agent less. It communicate through ssh.
 
-===========================
+Advantage : Free, light weight, Agentless, secure ssh . YAML, push mechanism.
+
+===============================================================================
 
 Terms of Ansible
 
 Ansible Server : machine where Ansible is installed and from which all tasks and playbook will run.
 
-Module : Module is a commandn or set of command ment to be executed on client side.
+Module : Module is a command or set of command meant to be executed on client side.
 
 Task : Task is a section that consist of a sinlge procedure to be completed.
 
@@ -39,7 +41,7 @@ Role : way of organizing task and files.
 
 Fact :
 
-Invenrty: File contain data about the client server . 
+Invenrty: File contain data about the client server. /etc/ansible/hosts
 
 play : Execution of playbook . 
 
@@ -47,52 +49,97 @@ Handler : Task which is called only if a notifier is present.
 
 Notifier : 
 
-Playbooks:
+Playbooks: group of modules
 
 Hosts : Node or Host are same 
 
-=======================================
+===============================================================================
 
 Ansible Practical Lab 
 
 AWS , 3 Instance in same AZ 
 
 1. On 1 instance which will be Ansible server , do putty and download ansible 
-2. $ sudo yum install epel-release
-	$ sudo yum install ansible
-3. Now go to host file make ansible server and paste nodes private ips. this host file also called inventry 
-4. vi /etc/ansible/hosts
-   [nodes]
-	172.0.0.0
-	182.0.0.0
-	
-5. Now this file is only working after updating ansibe.cfg 
-6. vim /etc/ansible/ansible.cfg    uncomment invernrty and root
-	sudo -user = root 
+[root@ip-172-31-4-121 ec2-user]# amazon-linux-extras install epel
 
-now create user/password in all 3 instance all user could be different.
+[root@ip-172-31-4-121 ec2-user]# yum install ansible -y
+
+[root@ip-172-31-4-121 ec2-user]# yum update -y
+
+[root@ip-172-31-4-121 ec2-user]# yum install git python python-level python-pip ansible -y
+
+[root@ip-172-31-4-121 ec2-user]# ansible --version
+
+
+2. Now go to host file make ansible server and paste nodes private ips. this host file also called inventry 
+vi /etc/ansible/hosts
+[demo]
+172.31.15.118
+172.31.11.132
+
+3. Uncomment the Below in  vim /etc/ansible/ansible.cfg
+[root@ip-172-31-4-121 ec2-user]# vim /etc/ansible/ansible.cfg
+
+uncomment the below : 
+
+inventory      = /etc/ansible/hosts
+sudo_user      = root
+
+
+4. now create user/password in all 3 instance all user could be different.
 #adduser ansible
 #passwd ansible 
+
+5. Give all Privilage to created user also in server and nodes (all machines).
+vi visudo
+root  All=All 
+ansible All= All  NOPASSWD:ALL			add this line 
 
 Switch user 
 #su - ansible 
 
-Give all Privilage to created user also in server and nodes .
-vi visudo
-root  All=All 
-ansible All= All 			add this line 
+Now these user can also install any thing like httpd (sudo yum install httpd -y)
 
-Now these user can also install any thing like httpd
+Now we need to update in ssh file to communincate both way on all machines first become su - ansible on all nodes 
 
-Now we need to update in ssh file to communincate both way on all machines 
+[root@ip-172-31-4-121 ec2-user]# su - ansible
+Last login: Mon Apr  4 12:14:11 UTC 2022 on pts/0
+
+6. FOr Permission denied Edit vi /etc/ssh/sshd-config   go as root user to edit on all nodes 
+
+[ansible@ip-172-31-4-121 ~]$ ssh 172.31.15.118
+The authenticity of host '172.31.15.118 (172.31.15.118)' can't be established.
+ECDSA key fingerprint is SHA256:HPxC73HIqU5Q8zbyJWrVm9AuFfUI3OT/s4a3nj3Puv0.
+ECDSA key fingerprint is MD5:70:52:2a:81:36:88:a0:9e:d0:db:50:c8:86:3f:3a:40.
+Are you sure you want to continue connecting (yes/no)? yes
+Warning: Permanently added '172.31.15.118' (ECDSA) to the list of known hosts.
+Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
+[ansible@ip-172-31-4-121 ~]$
 
 # vi /etc/ssh/sshd-config 
 
-To avoide password in all remote nodes do below
+PermitRootLogin yes					Uncomment this 
 
-DO ssh key gen on server 
-it will generate public and private key 
-copy public key to oner noded 
+# To disable tunneled clear text passwords, change to no here!
+PasswordAuthentication yes				UNcomment this 
+#PermitEmptyPasswords no
+#PasswordAuthentication no				COmment this 
+
+[root@ip-172-31-4-121 ec2-user]# service sshd restart  $ on all nodes 
+
+[root@ip-172-31-4-121 ec2-user]# ssh <Node1 public ip >			# Give password it will login 
+
+
+7. To avoide password in all remote nodes do below Do this as ansible user 
+
+[ansible@ip-172-31-4-121 ~]$ ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/ansible/.ssh/id_rsa):
+Enter passphrase (empty for no passphrase):
+
+[ansible@ip-172-31-4-121 ~]$ ls -a
+.  ..  .bash_history  .bash_logout  .bash_profile  .bashrc  .ssh
+
 
 this is called Trust relation ship 
 
@@ -103,31 +150,65 @@ once created copy it by
 
 ssh-copy-id ansible@privateip 
 
-======================
+
+[ansible@ip-172-31-4-121 .ssh]$ ssh-copy-id ansible@172.31.15.118
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/home/ansible/.ssh/id_rsa.pub"
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+ansible@172.31.15.118's password:
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:   "ssh 'ansible@172.31.15.118'"
+and check to make sure that only the key(s) you wanted were added.
+
+[ansible@ip-172-31-4-121 .ssh]$ ssh-copy-id ansible@172.31.11.132
+
+try ssh only from master node to other nodes pasword lewass login will happen. 
+
+[ansible@ip-172-31-4-121 .ssh]$ ssh 172.31.15.118				
+
+===============================================================================
 
 Few Ansible Command 
 
 To ck list of nodes 
 
-[ansible@ip-172-31-4-182 ~]$ ansible all --list-host
+[ansible@ip-172-31-4-182 ~]$ ansible all --list-host					# It will list all the Hosts
   hosts (2):
     172.31.7.3
     172.31.2.149
+	
+[ansible@ip-172-31-4-121 ~]$ ansible demo --list-host					# It will list all the Hosts in demo /etc/ansible/hosts inverory
+  hosts (2):
+    172.31.15.118
+    172.31.11.132
+
+[ansible@ip-172-31-4-121 ~]$ ansible demo[1] --list-host				# It will sort the second host in the demo
+  hosts (1):
+    172.31.11.132
+[ansible@ip-172-31-4-121 ~]$ ansible demo[0] --list-host				# It will sort the first host in the demo
+  hosts (1):
+    172.31.15.118
+
+[ansible@ip-172-31-4-121 ~]$ ansible demo[-1] --list-host				# It will sort the last host in the demo
+  hosts (1):
+    172.31.11.132
+
+
+[ansible@ip-172-31-4-121 ~]$ ansible demo[1:4] --list-host				# It will sort from second to third host in the demo
+
+[ansible@ip-172-31-4-121 ~]$ ansible <grp1>[1:4]:<grp2>[1:5] --list-host   # It will sort from 2 groups group 1 and Group 2 hosts in the demo
  
-  ansible demo --list-host
-  
-  ansible demo[0] --list-host   first entry  and so on 
-  
-  ansible demo[0:7] --list-host   range
 =====================
 
-COde Can be pushed with 3 methods 
+Code Can be pushed with 3 methods 
 
 1. Ad Hoc Commands (Nothng but simple Linux Commands) Ad-hoc means Temprary, for small takss like shutdown , start , etc quick functions. One time usage
 2. Modules
 3. PlayBook
 
-Adhoc : Its not having Brain It do No Idopotency it menas if a file already create/exist and you give commnd via adhoc it will again create and overrite
+Adhoc : Its not having Brain It do No Idopotency it means if a file already create/exist and you give commnd via adhoc it will again create and overrite
 		that y its not having brain , and this is the disadvantage.
 		
 Module : and PlayBook both are in YAML . Module is a single commnd 
@@ -136,19 +217,57 @@ Module : and PlayBook both are in YAML . Module is a single commnd
 playbook : More than 1 module (more commands) is called Palybook. 
 
 Module is like a page and playbook is like entire book.
------------------------
+================================================================
 
 Ad-hoc : Its in /usr/bin/ansible 
 
 Example of adhoc commands:
 
-[ansible@ip]$ansible demo -a "ls"				-a is argument 
+[ansible@ip]$ansible demo -a "ls"				-a is argument for adhoc commands
+
+[ansible@ip-172-31-10-179 ~]$ ansible nodes -a "ls"
+[WARNING]: Platform linux on host 172.31.6.170 is using the discovered Python
+interpreter at /usr/bin/python, but future installation of another Python
+interpreter could change this. See https://docs.ansible.com/ansible/2.9/referen
+ce_appendices/interpreter_discovery.html for more information.
+172.31.6.170 | CHANGED | rc=0 >>
+a
+b
+c
+[WARNING]: Platform linux on host 172.31.4.40 is using the discovered Python
+interpreter at /usr/bin/python, but future installation of another Python
+interpreter could change this. See https://docs.ansible.com/ansible/2.9/referen
+ce_appendices/interpreter_discovery.html for more information.
+172.31.4.40 | CHANGED | rc=0 >>
+
+
 [ansible@ip]$ansible demo[0] -a "touch file1"
 
-[ansible@ip]$ansible demo -a "sudo yum install httpd -y"     it will install in all 
-[ansible@ip]$ansible demo -ab "yum install httpd -y"		 b = become  become is sudo in linux
+[ansible@ip]$ansible demo -a "sudo yum install httpd -y"     # it will install httpd on all the servers.
 
-Ansible Modules:  and PlayBook has Idempotency
+[WARNING]: Consider using 'become', 'become_method', and 'become_user' rather
+than running sudo
+[WARNING]: Platform linux on host 172.31.4.40 is using the discovered Python
+interpreter at /usr/bin/python, but future installation of another Python
+interpreter could change this. See https://docs.ansible.com/ansible/2.9/referen
+ce_appendices/interpreter_discovery.html for more information.
+172.31.4.40 | CHANGED | rc=0 >>
+Loaded plugins: extras_suggestions, langpacks, priorities, update-motd
+Resolving Dependencies
+--> Running transaction check
+---> Package httpd.x86_64 0:2.4.52-1.amzn2 will be installed
+--> Processing Dependency: httpd-tools = 2.4.52-1.amzn2 for package: httpd-2.4.52-1.amzn2.x86_64
+--> Processing Dependency: httpd-filesystem = 2.4.52-1.amzn2 for package: httpd-2.4.52-1.amzn2.x86_64
+--> Processing Dependency: system-logos-httpd for package: httpd-2.4.52-1.amzn2.x86_64
+--> Processing Dependency: mod_http2 for package: httpd-2.4.52-1.amzn2.x86_64
+--> Processing Dependency: httpd-filesystem for package: httpd-2.4.52-1.amzn2.x86_64
+
+
+[ansible@ip-172-31-10-179 ~]$ ansible nodes -ba "yum remove httpd -y"		 b = become  become is sudo in linux
+
+===================================================
+
+Ansible Modules:  Module and PlayBook has Idempotency
 
 Ansible ships with a number of modules (called module library) that can be execute directly on remote hosts or through playbook.
 Its in package itself of ansible , its not in adinal database 
@@ -158,7 +277,9 @@ its location is inverory file only.
 
 Example of Module Command
 
-[ansible@ip]$ansible demo -b -m yum -a "pkg=httpd state=present"		in yaml install=present , remove=absent , update=latest -b is sudo -m module 
+[ansible@ip]$ansible demo -b -m yum -a "pkg=httpd state=present"		# In yaml install=present, remove=absent, update=latest -b is sudo -m module
+
+ansible all -b -m yum -a "pkg=httpd state=present"  
 
 [ansible@ip]$ansible demo -b -m yum -a "pkg=httpd state=latest"
 
@@ -170,11 +291,11 @@ Example of Module Command
 
 [ansible@ip]$ansible demo -b -m copy -a "src=file1 dest=/tmp"			to copy files 
 
-** If you suppose run httpd prseent command twice so in first it will install and in second it will through that its already installed, its inteligent.
+** If you suppose run httpd present command twice so in first it will install and in second it will through that its already installed, its inteligent.
 
 Module Setup 
 
-How this module or palybook knwo that this file is present already or pkg is alredy install, this happens bcoz of setup file in module so it first go to nodes and check wether file/pkg is present or not and give info to server if not present it install . 
+How this module or palybook know that this file is present already or pkg is alredy install, this happens bcoz of setup file in module so it first go to nodes and check wether file/pkg is present or not and give info to server if not present it install . 
 
 setup keep run in background , an thats y idempoteny is possbile.
 
@@ -182,7 +303,7 @@ setup keep run in background , an thats y idempoteny is possbile.
 
 [ansible@ip]$ansible demo -b -m setup -a "filter=*ipv4*"
 
-==========================
+===================================================
 
 PlayBook :
 
@@ -207,6 +328,12 @@ Indentation is important in yaml.
 key: value
 name: manu			give space after colon
 
+hosts = On which nodes you need to run those 
+user = by which user you need to do that
+become = to becoe sudo 
+connection = ssh previosly parameko was also there 
+
+
 --------------------------------------------------
 [ansible@ip]$ vi targetsection.yml
 
@@ -224,12 +351,11 @@ name: manu			give space after colon
 -----------------------------------------------------
 [ansible@ip]$ vi mytask.yml
 
---- # my first task playbook
+--- # my first target and task playbook
 - hosts: demo
   user: ansible
   become: yes
   connection: ssh
-  
   tasks:
 		- name: install httpd on linux
 	      action: yum name=httpd state=installed
@@ -237,6 +363,18 @@ name: manu			give space after colon
 :wq!
 
 [ansible@ip]$ansible-paybook mytask.yml
+
+
+TO REMOVE a package 
+
+- hosts: nodes
+  user: ansible
+  become: yes
+  connection: ssh
+  tasks:
+    - name: install httpd on system
+      action: yum name=httpd state=removed
+
 
 -----------------------------------------------------
 
@@ -281,7 +419,7 @@ Handler: It same as task but it will run when called by another task.
 	      action: yum name=httpd state=installed
 		  notify: restart httpd
 
-   handlers: 
+  handlers: 
 		- name: restart httpd
 		  action: service name=httpd state=restarted
 
@@ -311,12 +449,11 @@ Loops:
   
   tasks:
 		- name: Add a list of user
-	      user: name="{{items}}" state=present
+	      user: name="{{items}}" state=present			or action: user name"{{items}}" state=present
 		  with_items:
 		        - bhupendra
 				- raj
 				- manu
-
 
 :wq!
 
@@ -324,7 +461,7 @@ Loops:
 
 ---------------------------------------
 
-COnditions: 
+Conditions: 
 
 When ever we have different scenarios we have conditions. 
 
@@ -348,11 +485,12 @@ When ever we have different scenarios we have conditions.
 
 :wq!
 
-[ansible@ip]$ansible-paybook COnditions.yml
+[ansible@ip]$ansible-paybook Conditions.yml
 
 ----------------------------------------
 
 Vault : Ansible playbook is not secure so value can encrypt it bcoz playbook can have passwords and keys etc . hence valut is used .
+You can encripy it whilce creating only , 
 
 Create encrypt playbook (give password  AES256 for encryption Algo)
 
@@ -394,6 +532,8 @@ Meta : data of data , data detils
 Tasks: all tasks in playbook 
 
 Vars : variables 
+
+master.xml is main file and when it will crete target and inside that roles is there so it will call those files. 
 
 Practical 
 
