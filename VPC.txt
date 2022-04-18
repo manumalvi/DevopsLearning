@@ -1,7 +1,7 @@
 VPC : Virtual private Cloud
 
 suppose multiple apps are there for multiple clients so every one need privacy bcoz all apps are in same AWS data center hence to provide more privacy
-AWS use VPC . VPC is kind of virtual ata center it a virtual network . 
+AWS use VPC . VPC is kind of virtual data center it a virtual network . 
 
 so some application has to be used by public and some application they want it cant be used by public they want privacy .
 so based on subnet you can deside which subnet is public and which one is private. which subnet is used by public which subnet public cant use.
@@ -15,7 +15,7 @@ so VPC is a network and devide in multiple network is called sub networking (sub
 
 so in 3 tire application webpage will be in public sibnet and databse in private subnet.
 
-IP address is uniques (pubic ip )
+IP address is uniques (pubic ip)
 
 In world n number of machines are present but IPs are 2*32 hence we cant give to all so we give public IP to 1 server /machine and inside all will be private . Eg : yuotube has only 1 IP bcoz only that is only accessbile to world but inide it yotube has multiple numbers of app (security / finance / search etc its not having public IP ) which doesnt need public access but they are all interconnected so they have private ip address .
 			public iP 		Private ip 
@@ -53,7 +53,7 @@ now after creating subnet you need to connect to route table
 
 route table deside which subnet traffic will go where 
 
-route table public subnet -> traffic will go to internet gateay 
+route table public subnet -> traffic will go to internet gateway
 
 by default all subnet cummunicates each other , how that comm happends it means it autometly coneted with default rt 
 with in vpc commnuncation happends thorught via default route table 
@@ -67,7 +67,7 @@ traffic will flow like subnet -> IGW - > Interent and visa versa
 
 now you need to associate subnet to RT so public associte to rt 
 
-and then launch Ec2 one with public and another with priver 
+and then launch Ec2 one with public and another with private. 
 
 -======================
 
@@ -80,7 +80,6 @@ NACL applies on entire subnet
 so if in subnet there are 2 instance then on all 2 SG will be there 
 
 apache -> app server is called apache and web server is called httpd
-
 
 ========================
 
@@ -106,7 +105,7 @@ Network within a network / logically devision of ip
 Eg: ip 170.20.10.2  its network id is 170.20.0.0 bcoz its class B 
 	   192.168.10.30  its network id is 192.168.10.0  bcoz its class C 
 	   
-Route used for Inter network communication (2 diff network commnuncation)  eg 170.20.0.0 & 15.0.0.0 or 200.10.20.0 & 200.10.21.0
+Router used for Inter network communication (2 diff network commnuncation)  eg 170.20.0.0 & 15.0.0.0 or 200.10.20.0 & 200.10.21.0
 Switch used for with in network commnuncation.
 
 class A 10.0.0.0 here last 3 means 2^24 IP you can distribute 
@@ -277,7 +276,7 @@ It perform NAT Between your private and Public IP . SUpports IPv4 and IPv6.
 ======================================
 
 NAT Gateways :
-Network Address Translation : Public to Private IP and vis virsa 
+Network Address Translation : Public to Private IP and vise Versa 
 NAT gateway only uses Elastic IP 
 NAT gatway in public subnet. 
 Database is always in Private. 

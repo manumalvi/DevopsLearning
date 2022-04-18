@@ -575,4 +575,58 @@ c03b57aa5dc7
 
 IMP : We cant start image , Container only  can be started by container ID / container Name 
 
+=============================
+
+Docker Network 
+
+Problem : HOw contianer can communicate with each other if they are not in same network . 
+
+so if they are in same network they can communicate . 
+
+by default docker has 3 network
+1. bridge
+2. host
+3. none
+
+# docker network ls 
+
+run any contianer and check it on which network 
+
+# docker inspect <containerid>
+
+How to create your own network 
+
+# docker network create -d bridge mynetworkbridge
+
+IMP**  so the differenc btw default bridge and custom bridge ? 
+
+Communication can happen only using IP Container cant communinate with each other using name(contaer name)
+
+but in custome bridge Communication can happen using Names & IP Container can communinate with each other using name(contaer name) & IPs .
+
+so now if  you will create container undeer custome network all can communincate with names even for diff network 
+
+# docker run -d --name javawebapp --netwok mynetworkbridge manumalvi/myimg 
+
+# docker inspect javawebapp
+
+crete one more container in same bridge 
+
+# docker run -d --name pythonwebapp --netwok mynetworkbridge manumalvi/pythonimg
+
+# docker exec -it  javawebapp
+
+# ping pythonwebapp
+
+so to connect default bridge contianer to your network bridge : 
+
+# docker network connect <network name mynetworkbridge > <conainer name >
+
+
+Host network is nothing but your server netwokr . if contianer are created in host network they wont get ip address. 
+
+problem with host network is if one container created other cant create bcoz both cant use same port . one will keep on coming up/down, and wont have Ip also . 
+this host and none can only create 1 netwok 
+
+
 

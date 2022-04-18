@@ -1,0 +1,94 @@
+Open Source Container Orchestration tool . 
+Help managing containerized applications. 
+
+What it offers ? 
+Highability 
+Scalibility 
+Desaster recovery 
+
+Architecture : 
+
+At least 1 Master Node 
+and Couple of worker node. on each worker node node agent is running which is kubelet preocess. 
+
+kubelet is for cluster to talk to each other and running process on it.
+Each worker node has container of different application deploy on them. 
+
+Master node run few proces to run and manage cluster 
+first is API server (which also is a container) , its a Entry point to K8s cluster and used for UI , API , and CLI usage with cluster. 
+
+Controller manager : Keep track of whats happening in cluster , if any container died  etc .
+
+scheduler : it decide on which node new pod should be scheduled . so if at one node load is more so it will schedule at other node. 
+
+etcd : its like Db for cluster it has data of each node , container. it for backing ans store . 
+
+Virtual Network : it turns entire cluter into a one poerfull machine 
+
+---------------------
+Main Components: 
+
+Node : its a virtual or physical machine 
+
+pod: smalles unit in k8s, abstration over a container. usually 1 application per pod 
+	each pod contains IP address and pod communicate with each other via ip , they are not public ip. 
+	
+	problem is if pod will die/ app crash then ip will also gone and suppos its DB pod now ip will assign so problem 
+	
+service :hence service is atach as ip so if now pod is die and com up again service will be present there . service is like permanat IP . with dns name
+	
+	lifecycle of pod and service not connecd . service do load balancing also btw multiple nodes/pods . 
+	
+INgress : so service has externa and internal but external we cant expost to public hence we put ingress , so ingreess talsk to serice. 
+
+     problem if endpoint of DB changes then every where you need to change it . 
+	 
+configMap : its for extrnal configuration of your application . so give db end point here and if it changes change here only. 
+
+secret : is for storing credentials user paws it in base64 format. from some third porty tools. 
+
+Volume : storage on local machien , remote storage or out side k8s cluster , even if DB restarted all data will be there. 
+			kubernetes doesnt manage data persistency. 
+			
+
+Deployments : Here we need to specify how many pods replica we want . so its for blueprint for my-app pods , you create deployments. 
+so its like abstraction of pods. in practice we mostly work with deployment not with pods. 
+
+Database can not be replicated via Deployment. 
+
+StateFulset : for statefull app or databases. for DB we use this . so it for read and write are synchronisez so no inconsistency in data. 
+
+	deploying DB stateful is not easy , hecnce better to keep DB out of kubernetes cluster. 
+
+=================================
+pod : Abstraction of Containers
+
+service : communication
+
+INgress : route trafic into cluster 
+
+ConfigMap
+Secret :	external Configuration 
+
+volume : data persistence
+
+deployment 
+statefullset : replication
+
+=================================
+only entrypoint into cluster is API sercver could be reached via UI,API or CLI in yaml or json format 
+
+desitred state should be equal to actual state , and this kubernetes heals automaticly. 
+
+etcd hold the curent status of any k8s componets. 
+
+=================================
+
+Minikube is noting but Test/local cluster Setup . 
+
+where master and worker process run on same  node and docker is preinstalled. 
+
+kubectl is command line tool for kubernetes cluster. 
+
+
+			

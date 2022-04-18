@@ -15,7 +15,7 @@ to check EBS volume in linux : [ec2-user ~]$ lsblk
 
 linux package mgr is yum , apt-get 
 
-for download in linuc its wget , curl 
+for download in linux its wget , curl 
 
 ==============================================
 Ec2 has 2 storage EBS , Instance store (Fast)
@@ -75,7 +75,7 @@ Metadata is not encrypted
 if you want to see your instance meta data http://169.154.169.154/latest/metadata/
 
 Instance User data 
-Data supplied by user at instance launch in form of script during launch instance . 
+Data supplied by user at instance launch in form of script during launch instance. 
 its limited to 16k
 you can change User data by stopping ec2 first. 
 UD is not encrypted. 
@@ -84,6 +84,8 @@ EBS Elastic Block Storage
 EBS you can take snapshot and move it in AZ. 
 **EBS attached when instance launch when Ec2 terminated its deleted 
 **Running Instance if EBS atachend then it wont delete on termination. 
+At the time of Creating Instance in Add Storage you can add Volume. 
+Once EBS is created you have to first attach it to some Instance , now go to Windows server and make it Bring online . 
 
 Instance Storage 
 Data not lost when rebooted instnace 

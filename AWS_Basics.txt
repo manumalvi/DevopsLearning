@@ -33,7 +33,7 @@ Vertical scallig we remove small instance and add bigger instance
 Benifits of cloud : Cost saving, 24*7 Availability, scalability, Automated update of software, Desaster recovery, security, reduce carbon footprint etc.
 
 Cloud Options:
-Public cloud : provided by third party provider , simply come, use and pay eg AWS ,AZURE etc
+Public cloud : provided by third party provider , simply come, use and pay eg AWS, AZURE, GCP  etc
 Private cloud : For a interprises, like you personal resources , eg : private car public ola uber
 Hybrid : as per requriemt some app as public some as private so based on req . eg website in public but data base in private of same application 
 
@@ -57,7 +57,7 @@ on premices means local data centers
 =========================
 Basic cloud knowledge
 Database  Data bakup data store 
-Virtulizatin orchistartion 
+Virtulization orchistartion 
 API JSON 
 Linux sheet 
 Programing 

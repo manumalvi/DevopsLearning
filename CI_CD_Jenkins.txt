@@ -93,6 +93,20 @@ which in linux
 
 Get-Command git.exe | Select Definition     in wondows  on poershell 
 
+
+Webhooks v polling 
+
+Web hook is better approach then polling . 
+
+in polling work on pull meachnaiz it keeps on pinging server for data so it waste lot of resources . 
+
+but web hook work on push mechniz it keeps the link of the syatem and when ever new thing comes it triggers so no resource wasted. 
+so you are not wasting resources . by not pinging again and again . 
+
+webhook is future of intigartion .
+
+
+
 ========================================
 
 Linked Project 
