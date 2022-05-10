@@ -5,6 +5,14 @@ httpd is the same as apache2. It depends on the OS you use. For example in RHEL 
 
 sudo su = super user do Switch user 
 
+Sudo su - It will swich to root user home dir and load root user configurations .
+
+sudo su   It will not swich to root user home dir and not load root user configurations .
+
+root user home Directory ? 
+/root
+
+
 Linux Commands: 
 
 1. Cat :
@@ -13,6 +21,9 @@ Linux Commands:
 	cat > file1						# File Creation
 	cat >> file1 	  				# To add more content in file1
 	cat file1 file2 > file3		    # Flie1 and File2 will be concatinate to file3
+	
+	to give line number 
+	cat -n filename
 	
 ------------------------------------
 2. Touch :
@@ -34,6 +45,8 @@ Linux Commands:
 ------------------------------------
 4. $mkdir -p dir1/dir2/dir3  #It wil create 3 dir inside each other
 
+   mkdir -v manu 			 # It will show if it created successfully
+
 ------------------------------------
 5. $yum install httpd ; service httpd start but if machine stutdown it will stop so do chkconfig httpd on it will automaticly start once system is on.
 
@@ -51,15 +64,29 @@ Linux Commands:
 ------------------------------------
 
 10. $ grep root /etc/passwd   # To find out root word into file , used for finding errors etc in logs.
+
+	grep = global regular expression print 
+	
+	grep -i name <filename>	  # -i ignore
 ------------------------------------
 
-11. $ sort file               # It arrange in alphabetical order 
+11. $ sort file               # It arrange in alphabetical order
+      sort -r file			  # To display in decending order  
+	  
+	  cat filename | sort 
+	  cat filename | sort -r 
+	  
+	  cat filename | sort | tr [a-z] [A-Z]   # tr is for translate 
 ------------------------------------
 
 12. $ less/more filename	  # To read content of a File (less 1 page at a time), to quit q 
+		
+	  more <filename>		  # ctrl f (Forward 1 page) , ctrl b (backward)
+	  less <filename>		  # its same but take very less Ram compare to more so use this 
 ------------------------------------
 
 13. $ head/tail filename 	  # Top 10 lines / last 10 lines 
+	 tail -f filename		  # It will give you keep on updateed file. 
 ------------------------------------
 
 14. $ cat /etc/os-release	  # OS details, for other linux distributions cat /etc/*release
@@ -68,9 +95,13 @@ Linux Commands:
 15. $ yum list installed	  # Installed Packages
 ------------------------------------
 
-16. $ tar -cvf file.tar file  # Linux tar = Windows zip,  -cvf (create,verbose,force) xvf Extract
+16. $ tar -cvf file.tar file  # Linux tar = Windows zip,  -cvf (create,verbose,filename) xvf Extract
 
-	$ tar -xvf file.tar		  # gzip file.tar
+	$ tar -xvf file.tar		  # gzip file.tar   -xzvf for gunzip 
+	
+	or 
+	#zip -r newfilename <dirname>
+	unzip file.zip
 ------------------------------------
 17. cd ~   					  # User Home Directory	
 ------------------------------------		 
@@ -95,21 +126,28 @@ Linux Commands:
 ------------------------------------
 
 23. $ find /home -name tecmint.txt   # The find command helps us to find a particular file within a directory.
+      
+	  find . -type f -empty 			# To get all empty files 
 ------------------------------------
-24. sed : For searching, find and replace, insertion or deletion. 
+24. sed : For searching, find and replace, insertion or deletion. stream editor
 
 	cat > hello.txt
 	linux is os , linux is good.
 
-	sed 's/linux/unix/' hello.txt
+	sed 's/linux/unix/' hello.txt	# only replace first char in each line 
 
 	sed 's/linux/unix/2' hello.txt	# wanted to change n th occurence.
 
 	sed 's/linux/unix/g' hello.txt  # global replacement 
+	
+	sed -i 's/linux/unix/g' hello.txt  # replace and save 
+	
+	sed -n "110p" filename			# specific displaying line number 
+	sed -n "110,115p" filename		# display from line 110 to 115 
 ------------------------------------
 25. link :
 
-    hardlink : ln means hard link , For backup
+    hardlink : ln means hard link , For backup , inode number will be same  
 
     softlink : ln -s soft link, it like shotcut eg on windows desktop shotcuts, to quick access, if you remove orginal file then softlink will also be removed.
 
@@ -119,6 +157,13 @@ Linux Commands:
 	Hardlink : Create Hardlink it for backup but its kind of backup sync, sync from both file vice versa. Deleteting one File wont imapct another.
 
 	# ln orgfile hardfile
+	
+	
+	Can we create hard link to directory?
+	No 
+	
+	Can we create soft link to directory?
+	yes
 -----------------------------------
 26. awk
 
@@ -158,6 +203,273 @@ to download a software
 
 then you can do yum install
 
+user add can only do by root user .
+1000 is default uid RHEL 7 onwards UID 
+
+Root user UID is 0 
+
+
+/etc/passwd
+/etc/shadow
+/etc/group 
+
+adduser manu
+ls manu 
+
+password will go in /etc/shadow file 
+
+How to remove password ?
+
+go to shado file and put !! in that 
+
+# chage username 				min length, max length , last hange, 
+
+----------------------------------
+29. inode : Its a data structure , store the information of file/dir
+# ls -il 
+
+[root@ip-172-31-13-114 ec2-user]# ls -il
+total 0
+12774906 drwxr-xr-x 3 root root 19 Apr 20 10:28 manu
+
+it does not contain dir name and filename 
+
+----------------------------
+30 . ls -lt  # will sort latest to older as per time 
+     ls -ltr # in reverser of time 
+	 
+	 ls -lh  # human readalbe for size 
+	 
+	 umask for root 0022
+			   user 0002
+			   
+	chmod -R 777 manu 	 # recursivly 
+	
+	chmod +r manu  read permission for all 
+	
+	chmod +x manu
+	
+	chmod u+rwx,g+rw,o+r manu  # user group other with out number  764
+	
+	To make session alive vi /.ssh/config 
+	Host *
+	ServerAliveInterval 30
+	ServerAliveCountMax 2
+	
+-----------------------------
+31.  wc - line/word/char filename 
+	 wc -l manu.txt
+	 wc -w manu.txt
+	 wc -c manu.txt 
+	 
+	 
+	 
+System Resource command 
+
+who -H			# Who logged in server 
+w				# what loged in user are doing on server which script they are executing and how logn server is up and running. 
+uptime			# show since when server is up , it display load average how CPU utilization happend . both uptime and w dispaly 
+whoami			# it give current user info 
+whereis date    # to get binary file location and manual page location 
+date 			# Its in UTC time zone
+df 				# how many harddisk and there space , mount point , df -h 
+du -h dirname	# how much space a directory is taking , du -sh dirname  s=summury
+hostname		# hostname can only changed by root 
+hostname -i / ifconfig / ip a # to display ip address  , hostname -i dont rely on this 
+sudo /etc/hostname # change hostname here permantly 
+whatis mkdir 	# man gives detaild info but whatis is give specific only. 
+service 		# service servicename status/start/stop/restart
+or systemctl 	#rhel 7.x version onwards 	systemctl status jenkins  start stop by root only 
+last			# who has logged in last it will display 
+pa -ef|grep java* 
+kill -9 PID , 1-64 singal types are there . 
+kill -l  	    # all signal will appear
+
+
+windows services.msc # To see on windows 
+systemctl-list-init-files 
+
+crtl c Terminate processes
+ctrl z suspend process 		jobs command will show bg jobs after suspending 
+
+
+usermod -g Grpname username # IT will add user to grp 
+
+lid -g groupname			# All user in group will be displayed 
+
+default username UID 1000
+root 0
+
+group id is same as uid 
+
+id username 		# user belogn to how many group or groups username
+
+Root user --Nornal user --> No password needed			su - username 
+Nornal user --Nornal user --> password needed
+Nornal user --Root user --> password needed
+
+so if you want to give give root like permission so use sudoers /etc/sudoers
+visudo  open as root user 
+
+add user in all under root 
+
+userdel -r username  # -r bcoz it create a dir in /home 
+
+usermod -L username 	# to lock the user 
+usermod -U username		# to unlock the user 
+
+--------------------------------------------
+
+crond.service -- > service 
+crontab -l 			# how many job are there 
+
+crontab -e 			# edit 
+
+crontab -r 			# remove jobs , wont ask before deleting 
+
+crontab -ir 			# remove jobs   interactive 
+
+crontab -l -u otheruser 		# root or suser has sudo then only it can see 
+
+service crond.service status 
+or systemctl status crond.service
+
+How to restric cron tab access . 
+
+create a file in etc vi /etc/cron.allow
+
+sudo vi /etc/cron.allow
+<username>		#add username then only it will alow to those users 
+
+crontab format 
+
+minute 	hour 	day of month 	month 		day of week 	command/script 
+
+
+>  - redirect std output 
+>>  Append the standard output 
+
+File descripters  : 
+
+0		standard input 
+
+1		standard output
+
+2 		stadard error 
+
+hello.sh hello.log 2>&1
+
+--------------------------------------------------
+
+free -h # ram size 
+
+Swap memory is allocated from hard disk and its double of Ram size. 
+
+sudo dmidecode 
+
+sudo dmidecode -t 17 
+
+cloud server will Type RAM 
+
+--------------------------------------------------
+
+mail commnd to read mail 
+
+SMTP simple mail transfer protocol 
+
+wget url 
+
+404 : page not found standard error 
+
+wget -o /tmp/abc.zip url # To download SW at locaton 
+
+curl -o /tmp/abc.zip url # curl is for getting API request 
+
+ls > lscmd.log 
+
+ls | tee lscmd.log 	# IT will display on screen and redirect 
+
+
+script 		# it will kind of recording you can give name script manu.txt 
+exit 
+
+script -a manu.txt 	# it will append in above file only. 
+
+history it can store 1000 comand only 
+history -c # to clear history 
+
+ping -c 5 google.com # c = count 5 time it will ping 
+
+telnet along with connectivity cking port number or not 
+
+telnet google.com 80
+ctrl + c enter 
+
+
+redhat /etc/redhat-relaease
+ubuntu /etc/os-release 
+
+reserve port 1-1024
+total 0-65535 ports 
+
+http 80 , 22 ssh , ftp 21 , smtp 25 , https 443 
+8080 default ports tomcat/jboss/wildfly/jenkins 
+
+
+netstat -tunlpa				# tcp , udp , numbers, listining , program , all works with sudo 
+
+
+
+Bind exception 				# if both service use same port number 8080 tomcat and jenkins 
+Address already in use 
+
+
+watch date # TO display every 2 second default 
+watch -n 5 date # dispaly every 5 second 
+
+
+Types of Users ? 
+Root / Super user 
+
+Normal User : They are created by root user 
+
+System users : Created during SW installation 
+
+Jenkins ---> jenkins during installing SW this jenkins user will be created 
+apache hhtp server ---> apache 
+
+sbin = system bin , 
+diff betwn bin and sbin ?
+
+Binary which are in /bin is accessed by root and all other users but /sbin can only be used by root user. 
+
+bin : ls , date 
+sbin : shutdown , adduser 
+
+/etc : Contain all Configuration files ,sudoers , passwd ,shadow , cron.deny only root user can access. 
+
+/opt : By default its empty , 3rd party SW is installed here eg: Maven , Tomcat , SonarQue
+
+/dev : All devices information all devices related files 
+
+/lib : All library used by linux OS 
+
+/var : All system variable and all logs 
+
+/tmp : Can be access by any user so any user can share file to tmp 
+
+/proc : all process id info and cpuinfo 
+
+/usr : it contain binary and libraries 
+
+
+in Vi file 
+:set number   or :se nu
+:set nonumber or :se nonu
+:108
+/yum 
+
+
 ===============================================================================================================================
 
 										Basic Linux Shell Scripting
@@ -172,13 +484,111 @@ C shell − If you are using a C-type shell, the % character is the default prom
 Subcategories: C shell (csh), TENEX/TOPS C shell (tcsh)
 
 To check which shell you are using run below command:
-echo $SHELL
+echo $SHELL  or echo $0
 
 #!/bin/bash  
 echo "Hello World"  
 
+cat /etc/shells 		# To know how many shells which are install in the machine 
+
+yum install csh -y 
+
+#!  shebang  its not mendetory 
+
+
+how many ways to run 
+./hello.sh 
+. hello.sh
+sh hello.sh
+bash hello.sh 
+
+
+----------------------------------
+
+Shell script to see file is in pwd or not 
+
+if [ -f filename ] 
+then 
+echo "file avaialbe "
+
+if [ -r filename ] # for checking read permissio of file 
+----------------------------------
+
+Shell script in Debug mode 
+
+sh -x hello.sh   # debug mode 
+
+set -x 				# start debug mode
+echo "hello"
+set +x 				# stop debug mode 
+
+sh hello.sh 
+
+
+from sh -x hello.sh if we run then it will run only till +x in script . 
+
+you can keep set -x and set +x 
+
+File Naming Convention: 
+
+filename, alphabet , number dot and underscore is allowed . 
+
+2 Type of Comments : 
+
+# this is first 
+
+<<Manu
+
+abcdefgh 
+asdf
+Manu
+
+java/groovy/terraform 
+
+// 
+
+/*
+*/
+
+xml 
+
+<!--
+--> 
+
 ----------------------------------
 Variable in Shell Scripting:
+
+
+system variable : you can chekc it by 
+env 
+printenv 
+
+Default history size is 1000 HISTSIZE you can see in system variable .
+echo $HISTSIZE 
+echo $PWD    # its a variable in env 
+
+change history size 
+$ export HISTSIZE=200 
+
+change it permanantly 
+
+vi ~/.bash_profile 
+export HISTSIZE=200 
+
+source ~/.bash_profile   # To reload the changes  user changes 
+
+For all user changes 
+
+vi /etc/profile
+
+User define variable : 
+
+Cant give space while user define variable 
+
+a=10
+
+----------------------------
+
 
 File name: test.sh
 
@@ -255,11 +665,31 @@ test  "asdf"  "sdf"
 
 Argumets and their meaning
 $#	Number of arguments
-$*	All arguments
-$@	All arguments, starting from first
+$*	All arguments, it gives all arguments as one string 
+$@	All arguments, it gives each arguments as one string 
 $1	First argument
 $?  Was Last command Successful 0. 
-$0  File name itself 
+$0  script name/ File name itself 
+$$ gives the process ID . 
+
+127 is standard error code for command not found 
+
+if argument is 10 or more then we need to give in ${10}
+
+
+-------------------------------
+
+name = "hi this is my name ehat is your name "
+echo ${name} or echo $name
+echo ${#name}   it will give length of sting 
+
+echo ${name:20}  --> ${var:number of digits to ignore}  it will count space also 
+echo ${name:20:10} --> how many you want to display 
+echo ${name:-8}   -> last 8 characters 
+echo ${name:0:2}  -> it will display hi 
+
+
+
 
 #!/bin/bash
 get_name(){

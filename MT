@@ -1,0 +1,36 @@
+https://mithuntechnologies-devops.blogspot.com/2020/02/java-installation-linux-mithun.html
+
+https://mithuntechnologies-devops.blogspot.com
+
+echo " first usage "
+rm $*
+
+echo " 2nd usage "
+rm "$*"
+
+echo " 3rd usage "
+rm $@
+
+echo " 4th usage "
+rm "$@"
+
+
+run as sh program.sh "Hello World" good morning and see the difference between $* and $@
+
+================
+What is Docker Registory vs docker repository ? 
+
+Docker image tagging 
+
+Different states of Docker Container. 
+
+Can we delete paused container ? 
+
+Different type of nodes in docker swarm ? 
+
+How to add a worked node in existing docker swarm ? 
+
+what is autoscale in docker swarm ? 
+
+from cli have do do any thing using docker API? 
+

@@ -13,6 +13,80 @@ so in Git initially we work locally to add code later if we need we can push it 
 it has local Repo before Remote repo hence its distributed system. 
 if you do commit it commit in local repo.
 
+manu_prince2005@yahoo.co.in
+P#ssw0rd9
+
+=============================================
+Mithun 
+
+UNTRACKED FILES					TRACKED FILES 
+Working Area					Staging Area 							Local Area
+DBUtil.java				
+
+git status 	---------->
+						git add . 
+					or	git add *
+					or	git add *.java
+					or	git add DBUtils.java 
+					 
+					    DBUtil.java	
+									------------> git commit -m "Initinal Commit "
+											   or git commit -m "Initinal Commit " DBUtil.java
+											   
+											   
+git config --global user.name " manu"
+git config --global user.email "mail id"
+
+git config --global --list  # to check name email 
+
+git remote add az https://github.com/rc-devops-2022/Amazon.git  # az is alias name bcoz we cant remember entire url , origin is default alias 
+
+git remote -v 	# To check first if any remote repo is mapped with our local repo 
+
+EG: 
+mmalvi@INM01222 MINGW64 /c/Users/mmalvi/Desktop/walmart (master)
+$ git remote add az https://github.com/rc-devops-2022/Amazon.git
+
+mmalvi@INM01222 MINGW64 /c/Users/mmalvi/Desktop/walmart (master)
+$ git remote -v
+az      https://github.com/rc-devops-2022/Amazon.git (fetch)
+az      https://github.com/rc-devops-2022/Amazon.git (push)
+
+Fetch: getting updated code from remote repo to local repo 
+push : push for getting updated code from local  repo to remote repo 
+
+
+git --> Token --> PAT personal access token 
+
+HOw to Geneate :
+setting -> developer setting -> personal access token  select few and GenerTe token 
+
+
+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
+
+
+origin is Default alia name 
+
+git commit -a -m "single cmd for add and commit "  # this only work for already added or modified 
+
+We do not havgin any option to push perticular file to repo .
+
+
+
+git log 
+
+git show commitid 
+
+git show --pretty="" --name-only commitid # it will show preeety ony file name 
+=============================================
+
+Real time error 
+
+so if you are already using one account of git and doing oush and all , and you created another accout then 
+if you do push it wont allow and show first usr name bcoz in windows credentials it get saved so remove it and try. 
+
+
+
 =============================================
 
 1. Install git 
@@ -88,6 +162,8 @@ or
 git clone <url>
 its same as git add 
 
+git diff commitid1 commitid2		# To see changes btw 2 commits. 
+
 ============================================================
 .gitignore
 
@@ -129,14 +205,17 @@ Merge							# Merge has a pulling mechanism
 
 git merge new_branch		    # To Merge the Branch to Master, First come to Master Branch
 
-Git Conflict
+merge Conflict
 
 	same File name but File data is completly different then it will conflict 
 
 	now go to master branch and open the file by vim it will show all data 
 
 	and just remove head and ==== and make some changes and do add and commit . 
-
+	
+Rebasing : 
+	It is similer to git merge but difference here is that the history of commits of branch is also carried over when it is joined with current branch . basicly it beringn commit also when merges. so you can easily see all commits and investigete. 
+	#git rebase <branch name>
 ============================================
 
 Stashing : 
@@ -155,6 +234,8 @@ To stash an Item
 
 git stash -a   				# It will stash all Working Files 
 
+git stash pop 				# it will bring back stash files. 
+
 git stash list 				# To see the list of Stashed Files
 
 git stash apply stash@{0}   # To bring back file from stash 0 is latest and 1,2,3  older 
@@ -162,6 +243,7 @@ git stash apply stash@{0}   # To bring back file from stash 0 is latest and 1,2,
 							# After bring back also work will be in stash(copy and paste) so if you will stash again then git stash apply stash@{1} 
 
 git stash clear   			# To remove from stash 
+
 
 =============================================
 git reset  : before commit
