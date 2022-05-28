@@ -1,0 +1,215 @@
+With Maven we create build/packages jar , war or ear . 
+
+To run the jar file 
+
+java -jar jarFileName
+
+java Helloworld 			# We can run the class or jar file with java command 
+
+But if we have to run war or ear we need to use the Application servers 
+
+Popular java based Application Servers 
+
+JBoss / WildFly   1.x-7.x  JBoss 7.x latest WildFly   IBM 
+
+WAS - WebSphere Application Server  IBM 
+
+WLP - WebSpere Liberty Profile  IBM 
+
+WebLogic   - Oracle 
+
+Tomcat : Opensource , java based , Webapplication Server , Only for war File 
+
+JBoss / WildFly Can deploy war or ear File 
+
+For other Languges 
+.net -- IIS server 
+
+python no server only python software 
+
+.php  xamapp server 
+
+NodeJS - Install Node jS server 
+
+------------------------------------------------------
+
+Tomcat Directory Structure : 
+
+bin : 
+	startup.sh  - Linux / mac 		# Start Tomcat server 
+	startup.bat - Windows 
+	
+	shutdown.sh						# Stop  Tomcat server 
+	shutdown.bat 
+	
+	catalina.sh  stop/start  # Both can be done with same command 
+	catalina.bat 
+	
+	version.sh			# To know which version of Tomcat 
+	version.bat 
+
+conf: 
+	server.xml
+	tomcat-users.xml 
+
+lib :
+	jar files 
+	
+logs:
+	hostmanager.log
+	manager.log
+	catalina.log
+	localhost.log
+
+webapps: 
+	Default applications will be present  
+
+work
+
+temp 
+
+------------------------------
+
+Install Tomcat 
+
+Maven --> JDK 
+
+Tomcat -> JRE is Enough , JRE or JDK 
+
+Tomcat 9.x 
+java 1.8 or java 8 
+
+
+yum install wget unzip -y
+
+cd /opt
+wget https://dlcdn.apache.org/tomcat/tomcat-9/v9.0.63/bin/apache-tomcat-9.0.63.zip
+
+unzip apache-tomcat-9.0.63.zip
+cd /opt/apache-tomcat-9.0.63/bin
+chmod u+x *.sh
+
+ln -s /opt/apache-tomcat-9.0.63/bin/startup.sh /usr/bin/startTomcat
+ln -s /opt/apache-tomcat-9.0.63/bin/shutdown.sh /usr/bin/stopTomcat
+
+now startTomcat will work from any where
+
+Access server 
+
+http://13.126.253.171:8080/  # If not acceble then in AWS chekc the security group port numbers 
+
+-----------------------------------
+
+Tomcat server UI is up now 
+
+but Server status , manager app , Host manager is not accessble so do following 
+
+[root@ip-172-31-8-4 apache-tomcat-9.0.63]# cd webapps/manager/META-INF/
+[root@ip-172-31-8-4 META-INF]# pwd
+/opt/apache-tomcat-9.0.63/webapps/manager/META-INF
+
+in context.xml comment below lines 
+
+<!--
+  <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+         allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" />
+-->
+
+
+Now its asseble but need credentils add lines 
+
+vi conf/tomcat-users.xml
+
+<user username="manu" password="password9" roles="manager-gui,admin-gui"/>
+
+manager-gui  : Server status and manager app 
+
+admin-gui : Host manager 
+
+
+Host manager : 
+
+[root@ip-172-31-8-4 apache-tomcat-9.0.63]# cd webapps/manager/META-INF/
+[root@ip-172-31-8-4 META-INF]# pwd
+/opt/apache-tomcat-9.0.63/webapps/host-manager/META-INF
+
+in context.xml comment below lines 
+
+<!--
+  <Valve className="org.apache.catalina.valves.RemoteAddrValve"
+         allow="127\.\d+\.\d+\.\d+|::1|0:0:0:0:0:0:0:1" />
+-->
+
+===========================
+Change port number for Tomcat server 
+
+
+if tring to use same port number which is in use : 
+
+BindException 
+Address already in use 
+
+Conf directory server.xml 
+
+at line 69 change port number 
+
+so any config in server.xml you need to restart to make it work 
+
+stopTomcat
+StartTomcat 
+
+
+port range 0-65535
+
+==============================================
+How To Deploy the Application on Tomcat Server : 
+
+- Start the Tomcat server 
+- Go to Web page of it and Manager App login by user/password tomcat-users.xml 
+- Select WAR File to upload Browse it from local machine , Share from maven server to local by Filezilla FTP tool 
+- Click Deploy , It will Copy that war file in webapps Folder. 
+- IPTOmcatserver:8080/warFilename  , http://10.0.2.3:8080/maven-web-application
+- To stop allication , stop button is there 
+- Undeploy will remove war file from webapps
+
+you can give customized context path also /myApp and  /tmp/maven-web-application-0.0.1-SNAPSHOT.war in WAR dir 
+
+Reload button Used for HOt Fix and Hot deployment : DIrectly making changes in Deployment server for java fils not for front end files . 
+
+Expire Session : like for how mcuh time its idle its going to login page again . like banking net banking application . 
+
+==========================================================================
+
+JBoss / WildFly 
+
+1.0 --7 .0 JBOss 
+
+8.x --- WildFly 
+
+JBoss/WildFly is an Enterprise Application Server its used to deploy the Web applications .war as well as Enterprise Application .ear 
+
+Tomcat server only .war files 
+
+INstalltion : 
+
+1. java 
+2. cd /opt 
+3. wget https://github.com/wildfly/wildfly/releases/download/26.1.1.Final/wildfly-26.1.1.Final.zip
+4. unzip wildfly zip file and cd into it 
+5. [root@ip-172-31-13-114 wildfly-26.1.1.Final]# cd standalone/configuration/
+6. edit standalone.xml search 127.0.0  and give your aws server private ip so that it wont change 
+7. go to bin directory and run sh add-user.sh  create managent user and password 
+8. Start server now sh standalone.sh 
+9. http://publicip:8080  13.126.235.56:8080
+10 . goto adminconsole and provide user name password what ever we set 
+11. go to deployment and select war or ear file 
+12. give publick ip port with context path    13.126.235.56:8080/maven-web-application-0.0.1-SNAPSHOT
+												13.126.235.56:8080/MavenEnterpriseApp-web
+												
+you can do Disable / Replace / Undeploy 
+==========================================================================
+
+So if any Application whihc is having Back end code in Application server Wildfly and Front end code in Apache http server they interact via API 
+which developer knows . 
+
+

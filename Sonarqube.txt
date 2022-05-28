@@ -1,0 +1,77 @@
+Sonarqube : 
+
+Code Review : Going through source code and validating against the standards ..
+
+Code Coverage : How many lines of code Tested by unit test cases . 
+
+Sonarqube server is a static code Analysis tools . Its a Software Quality Management tool . Analyze and mesure qulaity of source code. 
+
+its not a executable SW we need to unzip and extract it . 
+
+IT identify below : 
+	Dulplicate code		(use funtion its folloing or not in code )
+	Code Standard 
+	Unit Test
+	Complex code		(like if else condition many time )
+	Comments			(remove the commented code )
+	Potential Bugs 			
+	Architecture and design 
+	
+-----------------
+Installtion 
+
+AWS instace 2 GB ram t2.medium 
+java 8 onwards or jre 1.8
+Sonarqube 7.8 
+	
+Architecture 
+
+Source code ---> Sonarqube Scanner ---> Sonarqube Server [ Compute Engine ] [H2] [Webserver] [Search Engine]
+
+Compute Engine once scanner generate report it give to server and Compute engine analyze it on different catogory like 
+1. Vlunrability 
+2. bugs
+3. code smell 
+
+H2 : If no external Data base is connected it uses its own DB H2 to sotere report. in pdf or html fomat 
+
+Webserver : to display dash board 
+
+Serach Engine : To search on dash board 
+
+-------------------
+
+#Download the SonarqQube Server software.
+cd /opt
+yum install wget unzip -y
+wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-7.8.zip
+unzip sonarqube-7.8.zip
+
+
+#As a good security practice, SonarQuber Server is not advised to run sonar service as a root user, so create a new user called sonar and grant sudo access to manage nexus services as follows.
+useradd sonar
+
+Give the sudo access to sonar user
+visudo
+
+sonar   ALL=(ALL)       NOPASSWD: ALL
+
+Change the owner and group permissions to /opt/sonarqube-7.8/ directory.
+chown -R sonar:sonar /opt/sonarqube-7.8/
+chmod -R 775 /opt/sonarqube-7.8/
+su - sonar
+cd /opt/sonarqube-7.8/bin/linux-x86-64/
+
+./sonar.sh start
+	
+------------------
+
+http://awsip:9000
+
+9000 sonarqube default port 
+
+mysql 3306 port 
+
+admin/ admin 
+
+

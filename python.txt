@@ -1,0 +1,203 @@
+1. List vs Tuple 
+
+List 
+
+List is mutalbe 				Tuple are immutalbe 
+List is in [] 					Tuple is in ()
+List iteration is slower 		Tuple process faster than list 
+List consume more memory		Tuple Consume less memery 
+---------------------------------------------------------------------------------------------
+
+2. What is Decorator ? Expalin with an example ? 
+
+Decorator is a function , that take function as an argument, add some functionlty and returing another function . 
+All of this without altering the source code of the original function that you passed in . 
+
+def decorator_func(func):
+	def wrapper_func():
+		print("This is wrapper")				2
+		return func()
+	print("This is decorator function")			1
+	return wrapper_func
+	
+def show():
+	print("This is show")						3
+
+dec = decorator_func(show)
+dec()
+
+# ALternative
+@decorator_func
+def display():                          Decorator function worked
+    print("my display")                 Wrapper function worked
+display()                               my display
+'''
+----------------------------------------------------------------------------------------------------
+3. List vs Dict Comprihencen
+
+[expression for item in iterable if conditional ]				{key:value for (key,value) in iterable if conditional}
+lst = [i for i in range(10) if i % 2]							dic = {n:n*n for i in range(1,10)}									
+print(lst)														print(dic)
+
+Normal iteration 
+
+l = []															d = {}
+for i in range(10):												for i in range(1,10):
+	if i%2:															d[i] = i*i
+		l.append(i)												print(d)
+print(l)
+	
+---------------------------------------------------------------------------------------------------
+4. How memory management in Python ? 
+Private heap containing all python objests and data structure. Interpriter take care of python heap and prograemer has no access to it . 
+The allocation of heap space is for python object is done by Python memery manager . 
+
+python has a build in garbage collector which recycle all unsued memory. 
+
+garbage collector module function to enable / disable garbage collector . 
+gc.enable   : enable automatic Gc 
+gc.disable  disable automatic gc 
+
+--------------------------------------------------------------------------------------------------
+5. Difference btw generator and iterator. 
+All generator can be iterator but all iterator cant be generator. 
+
+Genetator 																Iterator 
+
+Generator are iterator which executes only once. 						Iterate over iterable object like list , tuple etc 
+Generator use yield keyword 											Iterator use iter and next keyworkds 
+Every Generator is an iterator 											Every iteraor is not generator 
+
+-------------------------------------------------------------------------------------------------
+
+6. What is init in python ? 
+
+it can be used in 2 types 
+
+__init__.py File 
+
+__init__() Function 
+
+
+If any file contain __init__.py it menas its a python package , entire folder can be treeated as python package . 
+
+
+__init__.py 													__init__()
+
+It let the python interpriter know that a dir contain 			__init__ method is similer to constructor in c++/ java 
+code for python module . It can be blank. 
+
+																class Name:
+																	def __init__(self,name1):	
+																		self.name = name1
+																		
+																	def say_hi(self):
+																		print("Hello how are you , " self.name)
+																		
+																nam = Name("manu")
+																nam.say_hi()
+
+------------------------------------------------------------------------------------------------------------
+
+7. Difference btw module and package ? 
+
+module = File 				it has .py extention   eg import pandas
+package = folder 			whaich contains all .py files (modules )
+
+-----------------------------------------------------------------------------------------------------------
+8. range vs xrange 
+
+python 2 is having xrange not in python 3 
+
+range 
+
+it retunr a list of intiger 					xrange return a generator object 
+speed slow consume ore memery 					fast and less memeory 
+arithmetic operatin can be perform in range 	cant 
+----------------------------------------------------------------------------------------------------------
+9. What are inbuld data type in python / Expalin mutalbe and imutable data tpye in python ? 
+
+mutalbe : list , set , dict 
+immutable : boolen , float , int , tuple , string 
+
+=========================================================================================================
+
+10 . ternury operator 
+
+syntex 
+
+[if_true] if [expression] else [if_flase]
+
+age = 25
+discount = 5 if age < 65 else 10 
+print(discount)
+=========================================================================================================
+11. A clild class acurie the property of parent class . 
+
+class A:
+	def display(self):
+		print("A display ")
+	
+class B(A):
+	def show(self):
+		print("B  show ")
+		
+d = B()
+d.show()
+d.display()
+
+B show 
+A display 
+=========================================================================================================
+
+12 . Local vs Global veridlbe 
+
+
+Local is inside funtion 					Global variable is outside a funtion 
+
+if not initilized garbage value stored 		if not initilized zero stored 
+
+data sharing not haapen 					happend many func can use 
+
+==========================================================================================================	
+13. Break , continue , pass 
+
+break  is inside loop it will terminate the loop and exit. if inside nested loop it will break frm current loop. 
+continue : will stop the current execution when inside loop and control will go to start of loop . 
+pass : its a null statement . its do noting and ignoed. 	
+==========================================================================================================
+14. self : self variable is reference to the current instance of the class, and used to access the varaible that belogm to the class. 
+
+==========================================================================================================
+15. pickling / unpickling 
+
+pickling : pickle module accept an python object transform it into string representaion and dump into a file by using dump function. 
+This is known as pickling also colled serilization . function is pickle.dump()
+
+unpickling : reverting the original object from stored string represtaion is called unpickling , pickle.load() 
+
+==========================================================================================================
+16. Funtion of list : 
+
+sort() , append(), extend() , len() cmp()
+
+Funtion of Dictionary : 
+get() , items() , keys() values() 
+
+Funtion of Tuple 
+len() , sum() , sorted () cmp()
+
+Funtion of Set 
+add(),copy, clear() 
+
+==========================================================================================================
+17 , int() function , float() , type () 
+eval() funtion 
+
+a = '100+2+3'
+sum = eval(a)
+==========================================================================================================
+
+	
+	
+	

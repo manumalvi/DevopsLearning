@@ -32,16 +32,19 @@ git status 	---------->
 					    DBUtil.java	
 									------------> git commit -m "Initinal Commit "
 											   or git commit -m "Initinal Commit " DBUtil.java
+											   or git commit -a -m "modified file" DBUtil.java
 											   
 											   
 git config --global user.name " manu"
 git config --global user.email "mail id"
 
-git config --global --list  # to check name email 
+git config --global --list  									# to check name email 
 
-git remote add az https://github.com/rc-devops-2022/Amazon.git  # az is alias name bcoz we cant remember entire url , origin is default alias 
+git remote add az https://github.com/rc-devops-2022/Amazon.git  # az is alias name for repo bcoz we cant remember entire url, origin is default alias 
 
-git remote -v 	# To check first if any remote repo is mapped with our local repo 
+git remote -v 													# To check first if any remote repo is mapped with our local repo 
+
+git remote remove alias  										# To remove 
 
 EG: 
 mmalvi@INM01222 MINGW64 /c/Users/mmalvi/Desktop/walmart (master)
@@ -53,38 +56,244 @@ az      https://github.com/rc-devops-2022/Amazon.git (fetch)
 az      https://github.com/rc-devops-2022/Amazon.git (push)
 
 Fetch: getting updated code from remote repo to local repo 
-push : push for getting updated code from local  repo to remote repo 
+push : push for getting updated code from local repo to remote repo 
 
 
-git --> Token --> PAT personal access token 
+git --> Token --> PAT Personal Access Token 
 
-HOw to Geneate :
+How to Geneate :
 setting -> developer setting -> personal access token  select few and GenerTe token 
-
 
 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
 
+git commit -a -m "single cmd for add and commit "  			# this only work for already added or modified 
 
-origin is Default alia name 
+** We do not havgin any option to push perticular file to repo .
 
-git commit -a -m "single cmd for add and commit "  # this only work for already added or modified 
-
-We do not havgin any option to push perticular file to repo .
-
-
+git push it will show when its commited that time.
 
 git log 
 
 git show commitid 
 
-git show --pretty="" --name-only commitid # it will show preeety ony file name 
+git show --pretty="" --name-only commitid 					# it will show preety ony file name 
+
+git clean -n 
+git clean -f 												# working area if you want to delete files 
+
+git reset 													# Staging to working area it will move git reset *.java 
+
+git revert commitid 								# removed from commit files will be reverted in commit id and updates will be revereted if modified 
+
+if you are in branch and modified and did not commit so it  will refelect in other branch also , its not best practice, first commit in branch then switch br .
+
+git diff brname 									# you are in master branch 
+
+if you do git merge development 
+if conflict --> open that file 
+HEAD is the pointer to current branch , remove those lines , and save file and then commit. 
+
+Creating and switciing to new branch 
+git checkout -b <new branch_name>
+
+git branch -a # To see all branch locally and remote also 
+
+push all branches local to remote
+git push wm master dev   or 
+
+git push wm -all 									# this can be used for multiple branches 
+
+so if yo deeleted one branch then 
+
+git push wm :developemnt 							# To deelte Remote branch 
+or 
+git push wm --delete developemtn 					# To deelte Remote branch 
+
+----------------------------------------------------------------------------------------
+
+Tags 
+
+Branch 											Tag
+Branch is mutalbe 						Tag is immutable (cant modify)
+Create in on going developemnt			After production deploymrnt production = live , end user/custoemr going to use that 
+
+										tag is going to create on master branch (we can create on other branch also)
+git branch 								git tag 										
+git branch bn							git tag tg 	
+git branh -d bn 						git tag -d tg
+git push wn bn 							git push wn tag tg
+git push wn --all						git push wn --tags  	# Interview question How to push all tags at once 								
+
+git tag -d tagname 						#but tag cant be deleted in github 
+
+** We cant delete tag in GitHub . 
+
+https://github.com/MithunTechnologiesDevOps/AnisblePlayBooks
+
+----------------------------------------------
+Backup in Git : stash 
+
+git stash 							# what files in working area it will take backup 
+git stash list 
+git stash@{0}
+git stash@{1}
+
+git stash apply stash@{0}
+
+git stash drop stash@{0}
+
+git stash pop 						# it will apply and delete also 
+git stash pop stash@{1} 
+
+git stash save "some message "		# othe wise it will take last commit message 
+----------------------------------------------
+
+cherry pick 
+
+git cherry-pick commitid 			# to only intigrate specific commit merge to other branch if you have n number of commits 
+
+git checkout master 
+
+git cherry-pick commitid 			# this commit id frm different branch 
+----------------------------------------------
+
+clone 								# to download the repository and it will map the alias with url, git init also not needed 
+
+https://github.com/mss-devops-batch/walmart.git
+
+git clone https://github.com/mss-devops-batch/walmart.git		# no need to do git init also all git commnd will work inside dir 
+
+clone = in local repo , fork = in remote repo.
+clone = local repo , fork = remote repo 
+
+git pull vs git fetch 
+
+git pull = git fetch + git merge 
+
+remote repo -------git ftch ---------------> local repo ---------git merge ----------------->working copy 
+remote repo ---------------------------git pull ----------------------------------------->working copy  
+ 
+
+if you have done some work and now you want to update we use fetch 
+git fetch origin master
+git merge origin/master
+
+if you go to office and starting no work done you do pull 
+git pull origin master 
+----------------------------------------------
+
+http status code 
+
+Informational responses (100–199)
+Successful responses (200–299)
+Redirection messages (300–399)
+
+Client error responses (400–499)
+400 Bad Request
+401 Unauthorized
+402 Payment Required Experimental
+403 Forbidden
+404 Not Found
+
+Server error responses (500–599)
+500 Internal Server Error
+501 Not Implemented
+502 Bad Gateway
+503 Service Unavailable
+504 Gateway Timeout
+505 HTTP Version Not Supported
+
+---------------------------------------------
+
+SSH Conneting remote repo GitHub via ssh 
+
+in linux PAT cant be set . 
+
+Genrating ssh key command 
+
+ssh-keygen 
+
+Once you do ssh-keygen it create 2 keys 
+id_rsa 		--->   private key 			# rsa encription is algorethm named after scinentis name 
+id_rsa.pub  --->   Public key
+
+Other algorethm can also be used like 
+
+ssh-keygen -t dsa  
+id_dsa	--->   private key
+id_dsa.pub
+
+after ssh-keygen it generate, it store all ssh key in user home directory ~/.ssh 
+
+$ ls -la ~/.ssh/
+total 13
+drwxr-xr-x 0 mmalvi 1049089    0 May 16 17:26 ./
+drwxr-xr-x 0 mmalvi 1049089    0 Apr 27 13:00 ../
+											config 			# To make sessions alive more time we use this 
+-rw-r--r-- 0 mmalvi 1049089 2602 May 16 17:26 id_rsa
+-rw-r--r-- 0 mmalvi 1049089  569 May 16 17:26 id_rsa.pub
+-rw-r--r-- 0 mmalvi 1049089  226 May  1 18:22 known_hosts	# when you connect first time is ask you want to connect Yes/no after yes it store here .
+															# server host file it stores , server host information it collects . 
+															
+															
+
+copy id_rsa.pub to github and try to connect like below : 
+ssh -T git@github.com
+
+git remote -v # configure ssh url 
+
+git@github.com:rc-devops-2022/walmart.git 
+
+$  git remote add sshwm git@github.com:rc-devops-2022/walmart.git
+
+
+PAT Genetares in gitHub and ssh generates on shell / local. 
+
+$ git remote -v
+az      https://github.com/rc-devops-2022/Amazon.git (fetch)
+az      https://github.com/rc-devops-2022/Amazon.git (push)
+sshwm   git@github.com:rc-devops-2022/walmart.git (fetch)
+sshwm   git@github.com:rc-devops-2022/walmart.git (push)
+wm      https://github.com/rc-devops-2022/walmart.git (fetch)
+wm      https://github.com/rc-devops-2022/walmart.git (push)
+
+
+so PAT is for https and sshkey is for ssh? yes
+----------------------------------------------------------------
+GIT API 
+
+wget is for downloading 
+
+curl is for downloading , using protocol and also for calling APIs. 
+
+Http methods 
+GET
+POST
+PUT 
+Delete
+
+search in API doc and you can create scripts from APIs. 
+
+echo "Creating the repo..."
+
+curl \
+-X POST \
+-u manumalvi1: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 \
+-H "Accept: application/vnd.github.v3+json" \
+https://api.github.com/orgs/rc-devops-2022/repos \
+-d '{"name":"Wallmart-GitHubAPIRepo"}'
+
+
+git rebase 
+
+
+
 =============================================
 
 Real time error 
 
 so if you are already using one account of git and doing oush and all , and you created another accout then 
 if you do push it wont allow and show first usr name bcoz in windows credentials it get saved so remove it and try. 
-
 
 
 =============================================
@@ -259,7 +468,7 @@ git reset --hard  	 		# It will delete from both workspace and staging both
 
 Git revert to undo existing commit. 
 
-git revert <comit id>		# if you do revert you will get new commit id 
+git revert <comit id>		# if you do revert you will get new commit id , after git revert you need to push also to github 
 
 =============================================
 

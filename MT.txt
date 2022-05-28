@@ -1,0 +1,88 @@
+https://mithuntechnologies-devops.blogspot.com/2020/02/java-installation-linux-mithun.html
+
+https://mithuntechnologies-devops.blogspot.com
+
+https://github.com/orgs/MithunTechnologiesDevOps/repositories
+
+https://github.com/MithunTechnologiesDevOps 
+
+http://mithuntechnologies.com/devops/DevOpsToolsMithunTechnologies.html
+
+
+
+echo " first usage "
+rm $*
+
+echo " 2nd usage "
+rm "$*"
+
+echo " 3rd usage "
+rm $@
+
+echo " 4th usage "
+rm "$@"
+
+
+run as sh program.sh "Hello World" good morning and see the difference between $* and $@
+
+================
+What is Docker Registory vs docker repository ? 
+
+Docker image tagging 
+
+Different states of Docker Container. 
+
+Can we delete paused container ? 
+
+Different type of nodes in docker swarm ? 
+
+How to add a worked node in existing docker swarm ? 
+
+what is autoscale in docker swarm ? 
+
+from cli have do do any thing using docker API? 
+
+How to create a docker namespace ? 
+
+HOw to check docker ip address ? 
+
+Tell me about Docker Compose File ? 
+
+If you will exit container data will be lost ? 
+
+y is docker volume for ? 
+
+what is docker swarm ? 
+
+how will you monitor a docker?
+
+how to copy from container . 
+
+how to read a file in shell ? 
+
+$$ in linux  $? 
+
+how to check the emempty file 
+
+what is signal and trap commnd in linux 
+
+array in linux 
+
+number of lines in file wc -l 
+
+how to remove duplicate from file 
+
+awk commnd 
+
+how to take backup 
+
+how to do debuging in shell script 
+
+what is host key checking ? 
+
+ansible roles / ansible galaxy 
+
+
+Sir for public repo can any one make changes and commit or remove files. ? and commit.
+
+EzHWPj6m8tBJwTSvCmTv

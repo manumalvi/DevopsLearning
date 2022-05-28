@@ -3,7 +3,7 @@ Maven is a Project Management tool . java project (java / apium/ restassuredAPI 
 Maven is a Build Tool . 
 Maven manages Dependencies. 
 
-OSS devops : all tools are open source Open source devops. 
+OSS devops : all tools are Open source devops. 
 
 maven is an application and proje mgmt tool developed by apache its based on POM.xml File. (Project Object model)
 
@@ -15,6 +15,204 @@ Build Tool :
 c, c ++ : make File
 .Net :	Visual Studio
 java : Ant,Maven,Gradle
+
+----------------------------------------------------------------------------------------------------------------------------
+
+helloworld.java   --> Source code 
+
+javac helloworld.java it will create helloworld.class  --> Byte code it understood by JVM java virtual machine 
+
+java helloworld   to run it. 
+
+
+standalone application (jar) Java Archive
+jar --> .class files + menifest files  (main class in menifest file )
+
+hello.jar to see content rename it to hello.zip and extract it 
+
+Web application (war) Web Archive
+
+java code + web content (html,css, js , Images )
+
+war = jar files + static content 
+
+Enterprise application (ear) Enterprise Archive
+
+multiple modules in ear . 
+
+ear = war + jar files ( at least 1 war should be there )
+
+
+Structured Data base is used when = More insertion , Updation , deletions 
+
+Unstructure DB = mOre Read actions , When using data for visutizing purpose , creating chart graph from data , createing Dash baords 
+
+--------------------------------------------------------------------------------------------------------------------------------------
+
+Maven Directory Structure: here maven in installed 
+
+bin : mvn 
+
+conf : settings.xml 
+
+lib : jar files 
+
+boot : jar files 
+
+-----------------------------
+
+Maven installtion 
+
+pre requisite --> java 
+java 1.7 or java 7 , java 1.8 or java 8 
+
+JDK -> Java develpment kit 
+
+JRE -> java runtime Environment 
+
+JDK = Java Compiler + Runtime Environment 
+
+JRE run for java program not for develope 
+
+POM.xml 
+
+GRoupID  = org name 
+ArtifactID = project name 
+version 
+scope 
+
+scope could be :
+test 
+compile 
+run 
+provided 
+
+
+cmd 				goal 
+mvn 				package 			mvn package  its a build command , it creates jar 
+
+1. Maven Local Reposiroires
+folder --> laptop/desktop/server 
+
+user home directory it creates one /.m2/repository -> default path for maven local repository
+C:\users\mmalvi\.m2\repository
+/home/manu/.m2/repository  in linux 
+
+Q : you can change this default .m2/repository in settings.xml by changeing tag <localReposiroy> here keep path </localReposiroy> 
+
+2. maven Contral Reposiroires   need internet to access any one can access in world 
+
+3. Maven Remote Reposiroires  access with in company and maintained by compnay and devops team . its like shared repo within org . 
+
+
+
+central = on internet
+remote = by organisations
+central -internet and remote- intranet
+
+-------------------------------------------
+3 maven life cycle 
+
+lifecycle 							goal 
+clean 								clean : it will delete the previos build files. 
+
+site								site : it will generate the documents for source code. swagger has been using now more populer 
+
+default 							validate : It will valide the project resource files and dir structre.
+									compile : it will compile the java code and junit test cases 
+									test : it will run the junit test cases 
+									package: it will create packages jar war ear 
+									install: it will store the build artifact in maven local repository
+									deploy: it wil store the build artifact into remote repo 
+
+Java Installation : 
+
+   wget -c --header "Cookie: oraclelicense=accept-securebackup-cookie" http://download.oracle.com/otn-pub/java/jdk/8u131-b11/d54c1d3a095b4ff2b6607d096fa80163/jdk-8u131-linux-x64.rpm
+   yum install jdk-8u131-linux-x64.rpm -y
+   java -version
+
+Maven Installation on Redhat :
+
+wget https://dlcdn.apache.org/maven/maven-3/3.8.5/binaries/apache-maven-3.8.5-bin.zip
+unzip apache-maven-3.8.5-bin.zip
+vim ~/.bash_profile
+   
+   
+	export M2_HOME=/opt/apache-maven-3.8.5
+
+	export PATH=$PATH:$M2_HOME/bin
+
+   
+source ~/.bash_profile
+
+
+
+mvn test  # to run the unit test 
+
+what is differece btw mvn install and mvn deploy ? 
+
+mvn install will store build artifact into local repo but mvn deploy will store build artifact into remote repo 
+build script = pom.xml developer will write 
+
+sir is .M2 created or it will create after mvn package ? created bcoz mvn install but blank 
+
+sir if dependency got updated then next time will they update? NO  it will download as per the version number only 
+
+
+ArtifactID-Version.jar 
+maven-stanalone-application-0.0.1-SNAPSHOT.jar 
+
+classes = all java class
+test classes = all junit test classes 
+
+mvn clean 
+will delete target directory  
+
+if you do test then default order it will be in that order 
+
+even if 1 test case if failed its not going to create package 
+
+HOw to skip running the junit test cases ? 
+mvn clean package -DskipTests
+but in above case compilation will happen 
+
+mvn clean package -Dmaven.test.skip=true
+to skip compliing as well as running test cases . 
+
+----------------------
+
+In enterprise application there is one parent Pom.xml and there could be many child pom.xml lie for web one pom.xml and these other modules
+details is in parent . 
+
+Q. can we build for specific module only ? yes 
+
+mvn clean package -pl specificmodulename 			# -pl project list 
+
+if we use pl option for a particular module, will it resolve interdepency with other modules if any? yes 
+
+mvn clean install # after creating package jar file it is uploading in local repo directory 
+
+
+
+For Specific User
+----------------------
+vi ~/.bash_profile
+
+export M2_HOME=/opt/apache-maven-3.8.5
+
+export PATH=$PATH:$M2_HOME/bin
+
+source ~/.bash_profile
+
+For All Users
+---------------------- 
+vi /etc/profile
+export M2_HOME=/opt/apache-maven-3.8.5
+export PATH=$PATH:$M2_HOME/bin
+
+source /etc/profile
+==========================================================================
+
 
 Proeblem without maven 
 

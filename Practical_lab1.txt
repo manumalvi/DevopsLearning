@@ -1,0 +1,298 @@
+Create 4 server Develpor , Jenkins , ansible and webserver
+
+Go to Jeniks server and install java 
+sudo su 
+
+[root@ip-172-31-5-149 ec2-user]# sudo yum install java-1.8.0-openjdk -y
+
+[root@ip-172-31-5-149 ec2-user]# java -version
+openjdk version "1.8.0_312"
+OpenJDK Runtime Environment (build 1.8.0_312-b07)
+OpenJDK 64-Bit Server VM (build 25.312-b07, mixed mode)
+
+jenkins pkg from net for redhat 
+
+sudo wget -O /etc/yum.repos.d/jenkins.repo https://pkg.jenkins.io/redhat-stable/jenkins.repo
+sudo rpm --import https://pkg.jenkins.io/redhat-stable/jenkins.io.key
+
+yum install jenkins -y 
+
+systemctl start jenkins
+systemctl enable jenkins
+
+now access you jenkins with vm public ip port 8080 and set password and plugin . now jenkins server is ready .
+
+jenkins login manu/manu 
+
+install git on jenkins 
+
+yum install git -y 
+
+---------------------------------------------
+Ansible server
+
+yum install ansible
+amazon-linux-extras install ansible2 -y
+
+in invetroy file make entry of web server 
+
+ vim /etc/ansible/hosts 
+ 
+[webserver]  private ip 
+1.1.1.2
+
+---------------------------------------------
+Now install the apache pkg on web servwe
+
+yum install httpd -y 
+
+[root@ip-172-31-15-231 ec2-user]# systemctl start httpd
+[root@ip-172-31-15-231 ec2-user]# systemctl enable httpd
+
+cd /var/www/html   nothing should be here 
+
+Now make from ansible server to web server password lesss 
+
+[root@ip-172-31-13-169 ec2-user]# ssh-copy-id root@172.31.15.231    private ip of webserver  but having permission denied 
+/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/root/.ssh/id_rsa.pub"
+The authenticity of host '172.31.15.231 (172.31.15.231)' can't be established.
+ECDSA key fingerprint is SHA256:oBcKyguf6XFJ8BeJzhSzP4x9qMZESPL001DL7CJy0/w.
+ECDSA key fingerprint is MD5:51:e7:73:22:b5:05:c5:30:42:9d:2d:8f:a2:05:83:25.
+Are you sure you want to continue connecting (yes/no)? yes
+/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
+[root@ip-172-31-13-169 ec2-user]#
+
+first set root password on web server 
+
+[root@ip-172-31-15-231 html]# passwd root
+Changing password for user root.
+New password:
+BAD PASSWORD: The password is shorter than 8 characters
+Retype new password:
+passwd: all authentication tokens updated successfully.
+[root@ip-172-31-15-231 html]# vim /etc/ssh/sshd_config
+
+
+[root@ip-172-31-15-231 html]# systemctl restart sshd
+
+Now from ansible server try password : 
+
+[root@ip-172-31-13-169 ec2-user]# ssh-copy-id root@172.31.15.231
+/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/root/.ssh/id_rsa.pub"
+The authenticity of host '172.31.15.231 (172.31.15.231)' can't be established.
+ECDSA key fingerprint is SHA256:oBcKyguf6XFJ8BeJzhSzP4x9qMZESPL001DL7CJy0/w.
+ECDSA key fingerprint is MD5:51:e7:73:22:b5:05:c5:30:42:9d:2d:8f:a2:05:83:25.
+Are you sure you want to continue connecting (yes/no)? yes
+/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+Permission denied (publickey,gssapi-keyex,gssapi-with-mic).
+[root@ip-172-31-13-169 ec2-user]# ^C
+[root@ip-172-31-13-169 ec2-user]# ssh-copy-id root@172.31.15.231
+/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/root/.ssh/id_rsa.pub"
+/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+root@172.31.15.231's password:
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:   "ssh 'root@172.31.15.231'"
+and check to make sure that only the key(s) you wanted were added.
+
+[root@ip-172-31-13-169 ec2-user]# ssh root@172.31.15.231
+
+now communication happening btw ansiobe and web server. 
+
+-------------
+
+now make jenkins server communication with ansible
+
+
+[root@ip-172-31-13-169 ec2-user]# passwd root
+Changing password for user root.
+New password:
+BAD PASSWORD: The password is shorter than 8 characters
+Retype new password:
+passwd: all authentication tokens updated successfully.
+[root@ip-172-31-13-169 ec2-user]# vim /etc/ssh/sshd_config
+[root@ip-172-31-13-169 ec2-user]# service sshd restart
+Redirecting to /bin/systemctl restart sshd.service
+
+
+[root@ip-172-31-5-149 ec2-user]# ssh-copy-id root@172.31.13.169
+/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/root/.ssh/id_rsa.pub"
+The authenticity of host '172.31.13.169 (172.31.13.169)' can't be established.
+ECDSA key fingerprint is SHA256:c4FG5gVRLlXnRowy9C50anUcZfe5xZxxK47byfNdWTY.
+ECDSA key fingerprint is MD5:1a:e4:66:c8:b3:d8:75:8d:49:33:73:b1:e8:72:df:c3.
+Are you sure you want to continue connecting (yes/no)? yes
+/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+root@172.31.13.169's password:
+
+Number of key(s) added: 1
+
+Now try logging into the machine, with:   "ssh 'root@172.31.13.169'"
+and check to make sure that only the key(s) you wanted were added.
+
+[root@ip-172-31-5-149 ec2-user]# ssh root@172.31.13.169
+Last login: Fri Apr  8 05:51:33 2022
+
+       __|  __|_  )
+       _|  (     /   Amazon Linux 2 AMI
+      ___|\___|___|
+
+----------------------------
+
+now creating playbook on ansible server 
+
+- hosts: all
+  tasks:
+    - copy
+        ser: /opt/index.html
+        dest: /var/www/html
+		
+		
+now go to git hub and create one repo and one file in it index.html 
+
+intigarte git hub with jenkins 
+
+take url of jenkins http://3.110.189.240:8080/ and go to github -> webjook and paste 
+
+http://3.110.189.240:8080/github-webhook
+
+for secret go to jenkins and config and generate token and paste it in git hub s
+
+now install plugin publish over SSH on jenkins 
+
+install git package on jekis server else some erro it will show for git .
+
+for me webhook did not work os i installed git on jenkis servr and did poll scm 
+
+in build select send command or execute over ssh 
+
+but first you need to make jenkin server then only it will be able to run command on jenk serser 
+
+go to Manage jenkins-> confiure system -> bottm ssh server is there -> Add jenkisn hostname= privaate ip and test connection (give root password)
+
+build any job so that it will create workspace dir here only jenkins build will come 
+
+now go back to project and -> configure 
+
+in buuild command over ssh exec command rsync -avh /var/lib/jenkins/workspace/myfisrtjob/*.html root@172.31.13.169:/opt/index.html give 
+
+Build now 
+
+Buuld gone to ansible server in /opt but on web server noting is there 
+
+NO go to post buuld acrion 
+
+so we need to trigger play book on ansible so it will deploy on webserver 
+
+send build artifact over shh 
+
+
+=================================================================================
+
+Jenkins - ansible - docker host 
+
+Steps :
+
+1. Install Jenkins server and git package on same machine 
+2. Install Ansible server in inverntry add private ip of docker-host (another machine)
+4. since we are buiulding dokcerfile at ansible server only it menas ansible server should have docker package also 
+5. on dokcer host also install docker 
+yum install docker -y 
+
+systemctl start docker
+systemctl enable docker
+
+5. set root password for all 3 servers, and edit /etc/ssh/sshd_config for all server and make permitRootLogin and passwordauthentication Yes
+3. key less authentication from ansible to docker host , password less from Ansible to Docker Host  
+6. Make Jenins server to ansible server pawword less 
+7. Add jenkins server and Ansible server in jenkins as username passwd, for that Public over ssh install on jenkins 
+8. jenkisn config mgmt add jenkin server in it (private ip )
+9. create git hub repository and for now source code is one Dockerfile and commit this dockerfile.
+
+FROM centos:7
+MAINTAINER manu@gmail.com
+RUN yum install -y httpd \
+zip \
+unzip
+ADD https://www.free-css.com/assets/files/free-css-templates/download/page247/kindle.zip /var/www/html/
+WORKDIR /var/www/html
+RUN unzip kindle.zip
+RUN cp -rvf markups-kindle/* .
+RUN rm -rf __MACOSX markup-kindle kindle.zip
+CMD ["/usr/sbin/httpd", "-D", "FOREGROUND"]
+EXPOSE 80
+
+10. Now intigrate this repo with jenkins via webhook add jenkins URL (jenis url/github-webhook)(if Webhook not working then do polling scm )
+11. Now create job on jenkins and in Build, Add build step, build command over ssh. It will take Dockerfile from git and paste to ansible server . 
+rsync -avh /var/lib/jenkins/workspace/myjob/Dockerfile root@172.31.13.169:/opt 
+12. Add Build Space , Over ssh , take ansible server to run next task ,
+
+cd /opt
+docker image build -t $JOB_NAME:V1.$BUILD_ID . 
+docker image tag $JOB_NAME:V1.$BUILD_ID sd171991/$JOB_NAME:V1.$BUILD_ID						# sd171991 is docker login name you have to give yours 
+docker image tag $JOB_NAME:V1.$BUILD_ID sd171991/$JOB_NAME:latest
+docker image push sd171991/$JOB_NAME:V1.$BUILD_ID
+docker image push sd171991/$JOB_NAME:latest
+docker image rmi sd171991/$JOB_NAME:latest
+docker image rmi sd171991/$JOB_NAME:V1.$BUILD_ID sd171991/$JOB_NAME:V1.$BUILD_ID sd171991/$JOB_NAME:latest
+
+but when this will push to docker hub it will ask for ID password. 
+so for that on Ansible server we need to login docker hub priorly . docker login 
+
+13. Now on ansible server it will create a file and now we need to create a playbook here so that it can create container on Dockerhost server . 
+mkdir /sourcecode 
+vim docker.yml 
+- hosts: all 
+  tasks: 
+     - name: create contaner 
+	   shell: docker contaner run -it --name myapp-contaner -p 9000:80 sd171991/cloudknowledge-job   # this image nam match with jenkins job name 
+	   
+Post build action 
+ansible-playbook /sourcecode/docker.yml apply,save 
+
+run the job if it  success then give public ip : 9000 in url 
+
+14. now if you will give some other image in dockerfile it will fail bcoz runing contaer is already running with same name so you need to update docker.yml file first stop the container  . 
+
+vim docker.yml 
+- hosts: all 
+  tasks:
+	 - name: stop container
+	   shell: docker container stop myapp-container
+	 - name: remove container
+	   shell: docker container rm myapp-container
+	 - name: remove image
+	   shell: docker image rmi manumalvi/project2
+     - name: create contaner 
+	   shell: docker contaner run -it --name myapp-container -p 9000:80 manumalvi/project2
+
+
+real failure 
+while creating a container on centos its not ruinng yum install -y httpd on latest so change the version number 
+
+git hub gets error bcoz of master branch make it main 
+
+next dat job failed bcoz it password less auth is not happening with ansibleserver. 
+
+
+
+exit 1 
+ecit 127 comand not found 
+exit 255 some thing went wrong 
+
+
+502 bad gateway 
+
+
+
+
+
+
+
+
+
